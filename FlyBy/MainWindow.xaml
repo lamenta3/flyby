@@ -4,108 +4,103 @@
 	x:Class="FlyBy.Window1"
 	x:Name="Window"
 	Title="FlyBy"
-	Width="400" Height="480" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
-	<Window.Resources>
-		<Style x:Key="ButtonStyle1" BasedOn="{x:Null}" TargetType="{x:Type Button}">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type Button}">
-						<Grid>
-							<Rectangle Fill="#00FFFFFF" Stroke="#FF2F6AA2" RadiusX="3" RadiusY="3"/>
-							<ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
-						</Grid>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsFocused" Value="True"/>
-							<Trigger Property="IsDefaulted" Value="True"/>
-							<Trigger Property="IsMouseOver" Value="True"/>
-							<Trigger Property="IsPressed" Value="True"/>
-							<Trigger Property="IsEnabled" Value="False"/>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="TextButton" BasedOn="{x:Null}" TargetType="{x:Type Button}">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type Button}">
-						<Grid>
-							<Label Foreground="transparent" Content=""/>
-							<ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
-						</Grid>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsFocused" Value="True"/>
-							<Trigger Property="IsDefaulted" Value="True"/>
-							<Trigger Property="IsMouseOver" Value="True"/>
-							<Trigger Property="IsPressed" Value="True"/>
-							<Trigger Property="IsEnabled" Value="False"/>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-	</Window.Resources>
+	Width="420" Height="480" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+    <Window.Resources>
+        <Style x:Key="ButtonStyle1" BasedOn="{x:Null}" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Rectangle Fill="#00FFFFFF" Stroke="#FF2F6AA2" RadiusX="3" RadiusY="3"/>
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="TextButton" BasedOn="{x:Null}" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Label Foreground="transparent" Content=""/>
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
-	<Grid x:Name="LayoutRoot">
-		<Grid d:IsLayer="True" x:Name="Layer" Grid.ColumnSpan="1" Grid.RowSpan="1">
-			<TabControl IsSynchronizedWithCurrentItem="True" Style="{DynamicResource SimpleTabControl}" Background="#FFC3E7F5">
-				<TabItem Style="{DynamicResource SimpleTabItem}" Header="Twitter" FontFamily="./Fonts\#Trebuchet MS" IsTabStop="True" Background="#FFC3E7F5">
-				<Grid>
-				
-				<Rectangle HorizontalAlignment="Right" Width="133" Fill="transparent" Stroke="transparent" Margin="0,5,0,5"/>
-				
-					<Rectangle Opacity="0.5" RadiusX="9" RadiusY="9" Fill="skyblue" StrokeThickness="0.35" Margin="-5,-5,-2,-2">       
-						<Rectangle.Stroke>  
-							<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">  
-								<GradientStop Color="White" Offset="0" />  
-								<GradientStop Color="#666666" Offset="1" />  
-							</LinearGradientBrush>  
-						</Rectangle.Stroke>  
-					</Rectangle>
-		
-					<ListBox IsSynchronizedWithCurrentItem="True" Margin="20,5,133,88" BorderThickness="1,1,1,1"/>
-					<TextBox Margin="20,0,133,5" VerticalAlignment="Bottom" Height="58" Text="" TextWrapping="Wrap"/>
-					<ListBox IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Margin="0,121,6,0" VerticalAlignment="Top" Width="120" Height="75" BorderThickness="1,1,1,1">
-						<ListBoxItem Content="All"/>
-						<ListBoxItem Content="High Priority"/>
-					</ListBox>
-					<ListBox IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Margin="0,0,6,93" Width="120" Height="80" VerticalAlignment="Bottom" d:LayoutOverrides="VerticalAlignment" BorderThickness="1,1,1,1">
-						<ListBoxItem Content="All"/>
-						<ListBoxItem Content="Recent"/>
-						<ListBoxItem Content="Replies"/>
-						<ListBoxItem Content="Messages"/>
-						<ListBoxItem Content="Favorites"/>
-						<ListBoxItem Content="My Tweets"/>
-					</ListBox>
-					<Label HorizontalAlignment="Right" Margin="0,0,86,173" Width="44" Content="View:" Height="22" VerticalAlignment="Bottom" FontFamily="./Fonts\#Trebuchet MS" FontSize="12" FontWeight="Bold" Foreground="#FF2F6AA2"/>
-					<Label HorizontalAlignment="Right" Margin="0,99,86,0" VerticalAlignment="Top" Width="43" Height="24" Content="Lists:" FontFamily="Trebuchet MS" FontWeight="Bold" FontSize="12" Foreground="#FF2F6AA2"/>
-					<Label HorizontalAlignment="Right" Margin="0,0,137,65" VerticalAlignment="Bottom" Width="30" Height="21" Content="140" Foreground="#FF2F6AA2"/>
-					<Button HorizontalAlignment="Right" Margin="0,201,85,0" Style="{DynamicResource ButtonStyle1}" Width="40" Content="New" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
-					<Button HorizontalAlignment="Right" Margin="0,201,36,0" Style="{DynamicResource ButtonStyle1}" Width="45" Content="Manage" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
-					<Button HorizontalAlignment="Right" Margin="0,0,1,6" Style="{DynamicResource TextButton}" VerticalAlignment="Bottom" Width="57" Height="24" Content="Options!" Cursor="Hand" Padding="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="#002F6AA2" Foreground="#FF2F6AA2"/>
-				</Grid>
-				</TabItem>
-				<TabItem Style="{DynamicResource SimpleTabItem}" Header="Firehose" Background="#FFFDEB97" FontFamily="./Fonts\#Trebuchet MS">				
-				<Grid>
-						<Rectangle Opacity="0.5" RadiusX="9" RadiusY="9" Fill="#FFFBD72F" StrokeThickness="0.35">       
-							    <Rectangle.Stroke>  
-             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">  
-               <GradientStop Color="White" Offset="0" />  
-               <GradientStop Color="#666666" Offset="1" />  
-             </LinearGradientBrush>  
-          </Rectangle.Stroke>  
-         </Rectangle> 
-					<Rectangle HorizontalAlignment="Right" Width="133" Fill="transparent" Stroke="transparent" Margin="0,5,0,5"/>
-					<ListBox IsSynchronizedWithCurrentItem="True" Margin="15,5,133,88" BorderThickness="1,1,1,1"/>
-					<Button HorizontalAlignment="Right" Margin="0,0,1,6" Style="{DynamicResource TextButton}" VerticalAlignment="Bottom" Width="57" Height="24" Content="Options!" Cursor="Hand" Padding="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" Foreground="#FFC42B2B" Background="#00FFB31A"/>
-				</Grid>
-				</TabItem>
-			</TabControl>
-			
-			
-			
-			
-		
-		</Grid>
-	</Grid>
+    <Grid x:Name="LayoutRoot">
+        <TabControl IsSynchronizedWithCurrentItem="True" Background="Transparent" TabStripPlacement="Left" Margin="0" Padding="1,0,0,0">
+            <TabItem Header="Twitter" FontFamily="./Fonts\#Trebuchet MS" IsTabStop="True" Background="SkyBlue">
+                <Grid Background="SkyBlue">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="130"/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.Column="0" LastChildFill="True" Background="SkyBlue">
+                        <TextBox DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="2" MinHeight="58" Text="" 
+                                 TextWrapping="Wrap" Name="TweetBox" TextChanged="TweetBox_TextChanged" KeyDown="TweetBox_KeyDown"/>
+                        <Label DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Bottom" Width="30" Height="21" Content="140" Foreground="#FF2F6AA2" Name="NumberLabel"/>
+                        <ListBox Margin="2,2,2,0" BorderThickness="1,1,1,1" Name="TweetList">
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Retweet" Click="Retweet_Click"/>
+                                    <MenuItem Header="Copy" Click="CopyTweet_Click"/>
+                                    <MenuItem Header="Open" Click="OpenTweet_Click"/>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                        </ListBox>
+                    </DockPanel>
+                    <DockPanel Grid.Column="1">
+                        <Label DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,2,2,0" Width="44" Content="View:" Height="22" VerticalAlignment="Bottom" FontFamily="./Fonts\#Trebuchet MS" FontSize="12" FontWeight="Bold" Foreground="#FF2F6AA2"/>
+                        <ListBox DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,0,2,2" VerticalAlignment="Top" Width="120" Height="75" BorderThickness="1,1,1,1">
+                            <ListBoxItem Content="All"/>
+                            <ListBoxItem Content="High Priority"/>
+                        </ListBox>
+                        <Label DockPanel.Dock="Top" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,0" Width="43" Height="24" Content="Lists:" FontFamily="Trebuchet MS" FontWeight="Bold" FontSize="12" Foreground="#FF2F6AA2"/>
+                        <ListBox DockPanel.Dock="Top" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Margin="2,0,2,2" Width="120" VerticalAlignment="Bottom" d:LayoutOverrides="VerticalAlignment" BorderThickness="1,1,1,1">
+                            <ListBoxItem Content="All"/>
+                            <ListBoxItem Content="Recent"/>
+                            <ListBoxItem Content="Replies"/>
+                            <ListBoxItem Content="Messages"/>
+                            <ListBoxItem Content="Favorites"/>
+                            <ListBoxItem Content="My Tweets"/>
+                        </ListBox>
+                        <WrapPanel DockPanel.Dock="Top" HorizontalAlignment="Right">
+                            <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="45" Content="New" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
+                            <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="50" Content="Manage" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
+                        </WrapPanel>
+                        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,1,6" Style="{DynamicResource TextButton}" VerticalAlignment="Bottom" Width="57" Height="24" Content="Options!" Cursor="Hand" Padding="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="#002F6AA2" Foreground="#FF2F6AA2"/>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Firehose" Background="#FFFDEB97" FontFamily="./Fonts\#Trebuchet MS">
+                <DockPanel>
+                    <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,1,6" Style="{DynamicResource TextButton}" VerticalAlignment="Bottom" Width="57" Height="24" Content="Options!" Cursor="Hand" Padding="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" Foreground="#FFC42B2B" Background="#00FFB31A"/>
+                    <ListView DockPanel.Dock="Left" HorizontalAlignment="Right" Width="133" Margin="0,5,0,5"/>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </Window>
