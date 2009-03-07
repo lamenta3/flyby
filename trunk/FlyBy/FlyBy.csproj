@@ -38,6 +38,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="ManageFollowing.xaml.cs">
+      <DependentUpon>ManageFollowing.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>

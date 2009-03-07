@@ -172,47 +172,7 @@
                                     </ListBox.ContextMenu>
                                 </ListBox>
                                 <Grid Grid.Row="0" Grid.Column="0" Visibility="Collapsed">
-                                    <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="0,0,0,1">
-                                        <Border.Background>
-                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                <GradientStop Color="#FFD0DBE7" Offset="0" />
-                                                <GradientStop Color="#FFFFFFFF" Offset="1" />
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="80" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,12,0,0" Width="58" Height="60">
-                                                <aero:SystemDropShadowChrome CornerRadius="5,5,5,5">
-                                                    <Rectangle Stroke="#FF8E8E8E" RadiusX="10" RadiusY="5">
-                                                        <Rectangle.Fill>
-                                                            <LinearGradientBrush EndPoint="0.869,0.837" StartPoint="0.278,0.298">
-                                                                <GradientStop Color="#FFFFFFFF" Offset="0"/>
-                                                                <GradientStop Color="#FF7BB2B7" Offset="1"/>
-                                                            </LinearGradientBrush>
-                                                        </Rectangle.Fill>
-                                                    </Rectangle>
-                                                </aero:SystemDropShadowChrome>
-                                                <Border BorderBrush="{DynamicResource ImageBorderBrush}" BorderThickness="1,1,1,1" Margin="4,5,4,5" CornerRadius="2,2,2,2">
-                                                    <Image Width="48" Height="48" Source="{Binding Path=User.ImageUrl}" x:Name="UserImage" />
-                                                </Border>
-                                            </Grid>
-                                            <Grid Grid.Column="1" Margin="0,10,0,0">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="*" />
-                                                </Grid.RowDefinitions>
-                                                <TextBlock Text="{Binding Path=User.FullName, FallbackValue=Full Name}" FontWeight="Bold" FontSize="16" x:Name="FullName" Cursor="Hand" MouseLeftButtonUp="ScreenName_MouseLeftButtonUp" Tag="{Binding Path=User.TwitterUrl, Mode=Default}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=User.TwitterUrl, Mode=Default}" d:LayoutOverrides="Width, Height" />
-                                                <DockPanel Grid.Row="1">
-                                                    <TextBlock x:Name="Description" Text="{Binding Path=User.Description, Mode=Default, FallbackValue=Description}" TextWrapping="Wrap" FontStyle="Italic" DockPanel.Dock="Top" />
-                                                    <TextBlock x:Name="SiteUrl" Text="{Binding Path=User.SiteUrl, Mode=Default, FallbackValue=Site Url}" TextWrapping="NoWrap" MouseLeftButtonUp="Url_MouseLeftButtonUp" Cursor="Hand" TextTrimming="CharacterEllipsis" DockPanel.Dock="Top" ToolTip="{Binding Path=User.SiteUrl, Mode=Default}" TextDecorations="Underline" Foreground="#FF0000FF"><Hyperlink NavigateUri="{Binding Path=User.SiteUrl, Mode=Default, FallbackValue=Site Url}" /></TextBlock>
-                                                    <TextBlock x:Name="Location" Text="{Binding Path=User.Location, Mode=Default, FallbackValue=Location}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                                </DockPanel>
-                                            </Grid>
-                                        </Grid>
-                                    </Border>
+
                                     <ListBox x:Name="UserTimelineListBox" ItemsSource="{Binding Mode=OneWay}" ScrollViewer.CanContentScroll="False" IsSynchronizedWithCurrentItem="True" ItemTemplate="{DynamicResource UserTimeLineTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseLeftButtonUp="TweetsListBox_MouseLeftButtonUp" BorderThickness="0,0,0,0" DockPanel.Dock="Bottom" 
               controls:TweetTextBlock.NameClick="NameClickedInTweet"
               controls:TweetTextBlock.HashtagClick="HashtagClickedInTweet" >
@@ -230,6 +190,45 @@
                             </Grid>
                         </DockPanel>
                         <DockPanel Grid.Column="1">
+                            <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="0,0,0,1">
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FFD0DBE7" Offset="0" />
+                                        <GradientStop Color="#FFFFFFFF" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="6">
+                                        <aero:SystemDropShadowChrome CornerRadius="4">
+                                            <Rectangle Stroke="#FF8E8E8E" RadiusX="10" RadiusY="5">
+                                                <Rectangle.Fill>
+                                                    <LinearGradientBrush EndPoint="0.869,0.837" StartPoint="0.278,0.298">
+                                                        <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                                                        <GradientStop Color="#FF7BB2B7" Offset="1"/>
+                                                    </LinearGradientBrush>
+                                                </Rectangle.Fill>
+                                            </Rectangle>
+                                        </aero:SystemDropShadowChrome>
+                                        <Border BorderBrush="{DynamicResource ImageBorderBrush}" BorderThickness="1,1,1,1" Margin="2,3,2,3" CornerRadius="2,2,2,2">
+                                            <Image Width="32" Height="32" Source="{Binding Path=User.ImageUrl}" x:Name="UserImage" />
+                                        </Border>
+                                    </Grid>
+                                    <Grid Grid.Column="1" Margin="0,10,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="{Binding Path=User.FullName}" FontWeight="Bold" FontSize="14" x:Name="TwitterUserName" Cursor="Hand" MouseLeftButtonUp="ScreenName_MouseLeftButtonUp" Tag="{Binding Path=User.TwitterUrl, Mode=Default}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=User.TwitterUrl, Mode=Default}" d:LayoutOverrides="Width, Height" />
+                                        <DockPanel Grid.Row="1">
+                                            <TextBlock x:Name="TwitterFullName" Text="{Binding Path=User.FullName, Mode=Default}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                        </DockPanel>
+                                    </Grid>
+                                </Grid>
+                            </Border>
                             <Label DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,2,2,0" Width="44" Content="View:" Height="22" VerticalAlignment="Bottom" FontFamily="./Fonts\#Trebuchet MS" FontSize="12" FontWeight="Bold" Foreground="#FF2F6AA2"/>
                             <ListBox DockPanel.Dock="Top" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Margin="2,0,2,2" Width="120" VerticalAlignment="Bottom" d:LayoutOverrides="VerticalAlignment" BorderThickness="1,1,1,1" Name="TwitterListsListBox" SelectionChanged="TwitterListsListBox_SelectionChanged">
                                 <ListBoxItem Content="All" IsSelected="True"/>
@@ -240,14 +239,21 @@
                                 <ListBoxItem Content="User"/>
                             </ListBox>
 
-                            <Label DockPanel.Dock="Top" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,0" Width="43" Height="24" Content="Lists:" FontFamily="Trebuchet MS" FontWeight="Bold" FontSize="12" Foreground="#FF2F6AA2"/>
-                            <ListBox DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,0,2,2" VerticalAlignment="Top" Width="120" Height="75" BorderThickness="1,1,1,1">
+                            <Label DockPanel.Dock="Top" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,0" 
+                                   Width="43" Height="24" Content="Lists:" FontFamily="Trebuchet MS" FontWeight="Bold" 
+                                   FontSize="12" Foreground="#FF2F6AA2"/>
+                            <ListBox DockPanel.Dock="Top" Name="ListFilterListBox" HorizontalAlignment="Right" Margin="2,0,2,2" 
+                                     VerticalAlignment="Top" Width="120" Height="75" BorderThickness="1,1,1,1" SelectionChanged="TwitterListsListBox_SelectionChanged">
                                 <ListBoxItem Content="All" IsSelected="True"/>
                                 <ListBoxItem Content="High Priority"/>
                             </ListBox>
                             <WrapPanel DockPanel.Dock="Top" HorizontalAlignment="Right">
-                                <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="45" Content="New" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
-                                <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="50" Content="Manage" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
+                                <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" 
+                                        Width="45" Content="New" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" 
+                                        Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
+                                <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" 
+                                        Width="50" Content="Manage" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" 
+                                        Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment" Click="ManageLists_Click"/>
                             </WrapPanel>
                             <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="45" Content="Refresh" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
 

@@ -4,45 +4,66 @@
 	x:Class="FlyBy.ManageFollowing"
 	x:Name="Window"
 	Title="Manage Following - FlyBy"
-	Width="400" Height="300">
-	<Window.Resources>
-		<Style x:Key="ButtonStyle1" BasedOn="{x:Null}" TargetType="{x:Type Button}">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type Button}">
-						<Grid>
-							<Rectangle Fill="#00FFFFFF" Stroke="#FF2F6AA2" RadiusX="3" RadiusY="3"/>
-							<ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
-						</Grid>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsFocused" Value="True"/>
-							<Trigger Property="IsDefaulted" Value="True"/>
-							<Trigger Property="IsMouseOver" Value="True"/>
-							<Trigger Property="IsPressed" Value="True"/>
-							<Trigger Property="IsEnabled" Value="False"/>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-	</Window.Resources>
+	MinWidth="400" MaxWidth="400" MinHeight="300">
+    <Window.Resources>
+        <Style x:Key="ButtonStyle1" BasedOn="{x:Null}" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Rectangle Fill="#00FFFFFF" Stroke="#FF2F6AA2" RadiusX="3" RadiusY="3"/>
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True"/>
+                            <Trigger Property="IsPressed" Value="True"/>
+                            <Trigger Property="IsEnabled" Value="False"/>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
-	<Grid x:Name="LayoutRoot">
-		<Rectangle Margin="-1,-2,0,0" Fill="#FFC3E7F5" Stroke="#FFC3E7F5"/>
-		<ComboBox IsSynchronizedWithCurrentItem="True" Margin="67,10,118,0" VerticalAlignment="Top" Height="22" BorderThickness="1,1,1,1" Opacity="1" Foreground="#FF2F6AA2" Background="#00FFFFFF" BorderBrush="#FF2F6AA2" OpacityMask="#FF2F6AA2" FontFamily="./Fonts\#Trebuchet MS" IsReadOnly="True" >
-			<ComboBoxItem Content="High Priority" IsSelected="True"/>
-		</ComboBox>
-		<Label HorizontalAlignment="Left" Margin="34,10,0,0" VerticalAlignment="Top" Width="33" Height="21" Content="List:" FontFamily="Trebuchet MS"/>
-		<Button HorizontalAlignment="Right" Margin="0,10,74,0" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Top" Width="40" Height="20" Content="Add" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Background="#00D4D0C8" FontFamily="./Fonts\#Trebuchet MS"/>
-		<Button Background="#00D4D0C8" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" HorizontalAlignment="Right" Margin="0,10,30,0" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Top" Width="40" Height="20" Content="Delete" FontFamily="./Fonts\#Trebuchet MS"/>
-		<Button Background="#00D4D0C8" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" HorizontalAlignment="Right" Margin="0,0,52,8" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Bottom" Width="40" Height="20" Content="OK"/>
-		<Button Background="#00D4D0C8" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" HorizontalAlignment="Right" Margin="0,0,8,8" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Bottom" Width="40" Height="20" Content="Cancel" IsCancel="True"/>
-		<Button Background="#00D4D0C8" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Margin="181,80,171,0" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Top" Height="20" Content="&gt;"/>
-		<Button Background="#00D4D0C8" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Margin="181,104,171,0" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Top" Height="20" Content="&lt;"/>
-		<ListBox IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Left" Margin="33,65,0,49" Width="127" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Opacity="0.465"/>
-		<ListBox IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Margin="0,65,25,49" Width="127" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Opacity="0.465"/>
-		<Label HorizontalAlignment="Left" Margin="28,45,0,0" VerticalAlignment="Top" Width="60" Height="24" Content="Following:" FontFamily="./Fonts\#Trebuchet MS"/>
-		<Label HorizontalAlignment="Right" Margin="0,45,57,0" VerticalAlignment="Top" Width="100" Height="24" Content="List members:" FontFamily="Trebuchet MS"/>
-	</Grid>
-	
+    <DockPanel x:Name="LayoutRoot" Background="LightBlue" LastChildFill="True">
+        <WrapPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,4,0,2">
+            <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,3" Width="33" Height="21" Content="List:" FontFamily="Trebuchet MS"/>
+            <ComboBox IsSynchronizedWithCurrentItem="True" Margin="3" VerticalAlignment="Top" MinWidth="100" Height="22" 
+                  BorderThickness="1,1,1,1" Opacity="1" Foreground="#FF2F6AA2" Background="#00FFFFFF" BorderBrush="#FF2F6AA2" 
+                  OpacityMask="#FF2F6AA2" FontFamily="./Fonts\#Trebuchet MS" IsReadOnly="True" 
+                  Name="TwitterListComboBox" DropDownOpened="TwitterListComboBox_DropDownOpened" 
+                  SelectionChanged="TwitterListComboBox_SelectionChanged"/>
+            <Button HorizontalAlignment="Right" Margin="3" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Top" Width="40" Height="20" Content="New" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Background="#00D4D0C8" FontFamily="./Fonts\#Trebuchet MS" Click="NewList_Click"/>
+            <Button Background="#00D4D0C8" Margin="3" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Top" Width="40" Height="20" Content="Delete" FontFamily="./Fonts\#Trebuchet MS" Click="Twitter_DeleteList_Click"/>
+        </WrapPanel>
+        <Grid DockPanel.Dock="Top">
+            <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterListNameLabel" VerticalAlignment="Center">List name</Label>
+            <TextBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterListNameBox" VerticalAlignment="Center" TextChanged="TwitterListNameBox_TextChanged"/>
+        </Grid>
+        <Button DockPanel.Dock="Top" Content="Add List" MinHeight="20" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Visibility="Collapsed" Opacity="0.465" Name="TwitterAddListButton" Click="Twitter_AddList_Click"/>
+        <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5">
+            <Button Background="#00D4D0C8" BorderThickness="1,1,1,1" Margin="5,0,5,3" Foreground="#FF2F6AA2" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Bottom" Width="60" Height="23" Content="OK" Click="OK_Click"/>
+        </WrapPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0" VerticalAlignment="Center" Margin="5" LastChildFill="True">
+                <Label DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Content="Following:" FontFamily="./Fonts\#Trebuchet MS"/>
+                <ListBox DockPanel.Dock="Top" Name="FollowingListBox" IsSynchronizedWithCurrentItem="True" MinWidth="127" MinHeight="100" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Opacity="0.465"/>    
+            </DockPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="5">
+                <Button Background="#00D4D0C8" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Margin="5" Width="20" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Top" Height="20" Content="&gt;" Click="MoveSelectedUsersToList"/>
+                <Button Background="#00D4D0C8" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Margin="5" Width="20" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Top" Height="20" Content="&lt;" Click="MoveSelectedUsersFromList"/>
+            </StackPanel>
+            <DockPanel Grid.Column="2" VerticalAlignment="Center" Margin="5" LastChildFill="True">
+                <Label DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Top" Width="100" Height="24" Content="List members:" FontFamily="Trebuchet MS"/>
+                <ListBox DockPanel.Dock="Top" Name="ListMembersListBox" IsSynchronizedWithCurrentItem="True" MinWidth="127" MinHeight="100" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Opacity="0.465"/>    
+            </DockPanel>
+        </Grid>
+    </DockPanel>
 </Window>

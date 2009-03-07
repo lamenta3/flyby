@@ -40,9 +40,9 @@ namespace FlyBy
             ShowMainWindow();
         }
 
-        private void ShowMainWindow()
+        public void ShowMainWindow()
         {
-            // show the detail box
+            // create the object
             if (mainWindow == null)
             {
                 mainWindow = new MainWindow();
@@ -57,8 +57,21 @@ namespace FlyBy
             if (Options.TwitterCredentials.Count > 0)
             {
                 mainWindow.LoginTwitterUser();
+            }   
+        }
+
+        public void ShowListManager()
+        {
+            if (listManager == null)
+            {
+                listManager = new ManageFollowing();
             }
             
+            // show it
+            listManager.Show();
+
+            // bring it to front
+            listManager.Activate();
         }
 
         private void CreateUserOptions()
@@ -101,6 +114,8 @@ namespace FlyBy
         /// </summary>
         private MainWindow mainWindow;
 
+        private ManageFollowing listManager;
+
         /// <summary>
         /// Handle to the user options
         /// </summary>
@@ -116,5 +131,10 @@ namespace FlyBy
 
         // Main TwitterNet object used to make Twitter API calls
         public IServiceApi Twitter;
+
+        public void UpdateMainWindowFilter()
+        {
+            mainWindow.UpdateFilter();
+        }
     }
 }
