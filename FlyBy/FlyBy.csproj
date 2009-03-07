@@ -22,6 +22,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
     <ApplicationDefinition Include="App.xaml">
@@ -38,6 +39,7 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserOptions.cs" />
     <Page Include="Options.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -64,4 +66,14 @@
     </BlendEmbeddedFont>
   </ItemGroup>
   <Import Project="SubsetFont.targets" />
+  <ItemGroup>
+    <ProjectReference Include="FlickrNet\FlickrNet.csproj">
+      <Project>{5F017126-C1FF-4996-85CC-6150E80C6AFC}</Project>
+      <Name>FlickrNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="TwitterLib\TwitterLib.csproj">
+      <Project>{6CB55919-6C11-43A1-8769-57461BE5B0AE}</Project>
+      <Name>TwitterLib</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
