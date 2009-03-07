@@ -439,7 +439,7 @@ namespace TwitterLib
         }
 
         /// <summary>
-        /// The name of the current client. Defaults to "Witty"
+        /// The name of the current client. Defaults to "FlyBy"
         /// </summary>
         /// <remarks>
         /// This value can be changed if you're using this Library for your own twitter client
@@ -449,7 +449,7 @@ namespace TwitterLib
             get
             {
                 if (string.IsNullOrEmpty(clientName))
-                    return "witty";
+                    return "FlyBy";
                 else
                     return clientName;
             }
@@ -878,7 +878,7 @@ namespace TwitterLib
         }
 
         #region Secure String Members
-        static byte[] entropy = System.Text.Encoding.Unicode.GetBytes("WittyPasswordSalt");
+        static byte[] entropy = System.Text.Encoding.Unicode.GetBytes("FlyByPasswordSalt");
 
         /// <summary>
         /// 

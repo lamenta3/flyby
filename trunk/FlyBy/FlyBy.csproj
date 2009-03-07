@@ -20,9 +20,14 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
     <ApplicationDefinition Include="App.xaml">
@@ -39,8 +44,20 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Popup.xaml.cs">
+      <DependentUpon>Popup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="UserOptions.cs" />
     <Page Include="Options.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Popup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -71,6 +88,10 @@
   </ItemGroup>
   <Import Project="SubsetFont.targets" />
   <ItemGroup>
+    <ProjectReference Include="Common\Common.csproj">
+      <Project>{EA9BEE27-11D2-4346-83D9-9A056282B7B9}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="FlickrNet\FlickrNet.csproj">
       <Project>{5F017126-C1FF-4996-85CC-6150E80C6AFC}</Project>
       <Name>FlickrNet</Name>
@@ -79,5 +100,14 @@
       <Project>{6CB55919-6C11-43A1-8769-57461BE5B0AE}</Project>
       <Name>TwitterLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Application.ico" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections;
 using System.Xml.Serialization;
 using System.IO;
+using TwitterLib;
 
 namespace FlyBy
 {
@@ -18,7 +19,15 @@ namespace FlyBy
         {
             FlickrCredentials = new Dictionary<string, string>();
             TwitterCredentials = new Dictionary<string, string>();
+
+            twitterLoggedIn = false;
         }
+
+        [XmlIgnore]
+        public static string Filename = "options2.xml";
+
+        [XmlIgnore]
+        public static bool Deserializing = false;
 
         /// <summary>
         /// Flickr username and passwords
@@ -158,13 +167,232 @@ namespace FlyBy
         /// <summary>
         /// Serialize the list of registered users. This method runs every time a new user is added.
         /// </summary>
-        public void Serialize()
+        protected void Serialize()
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(UserOptions));
-            string filename = "options.xml";
-            StreamWriter outStream = new StreamWriter(filename, false);
-            serializer.Serialize(outStream, this);
-            outStream.Close();
+            if(!UserOptions.Deserializing)
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(UserOptions));
+                StreamWriter outStream = new StreamWriter(Filename, false);
+                serializer.Serialize(outStream, this);
+                outStream.Close();
+            }
+        }
+
+        private double notificationDisplayTime;
+        public double NotificationDisplayTime 
+        { 
+            get
+            {
+                return notificationDisplayTime;  
+            } 
+            set
+            {
+                notificationDisplayTime = value;
+                Serialize();
+            } 
+        }
+
+
+        private bool? showTwitterBalloonPopup;
+        public bool? ShowTwitterBalloonPopup 
+        { 
+            get
+            {
+                return showTwitterBalloonPopup;
+            }
+            set
+            {
+                showTwitterBalloonPopup = value;
+                Serialize();
+            }
+        }
+
+        // this value is in minutes
+        private int twitterUpdateRate;
+        public int TwitterUpdateRate 
+        { 
+            get
+            {
+                return twitterUpdateRate;   
+            }
+            set
+            {
+                twitterUpdateRate = value;
+                Serialize();
+            } 
+        }
+
+        [XmlIgnore]
+        private bool twitterLoggedIn;
+        [XmlIgnore]
+        public bool TwitterLoggedIn 
+        { 
+            get
+            {
+                return twitterLoggedIn;
+            }
+            set
+            {
+                twitterLoggedIn = value;
+                Serialize();
+            }
+        }
+
+        private string twitterLastUpdated;
+        public string TwitterLastUpdated 
+        { 
+            get
+            {
+                return twitterLastUpdated;
+            }
+            set
+            {
+                twitterLastUpdated = value;
+                Serialize();
+            }
+        }
+
+        private DateTime twitterRepliesLastUpdated;
+        public DateTime TwitterRepliesLastUpdated
+        {
+            get
+            {
+                return twitterRepliesLastUpdated;
+            }
+            set
+            {
+                twitterRepliesLastUpdated = value;
+                Serialize();
+            }
+        }
+
+        private DateTime twitterMessagesLastUpdated;
+        public DateTime TwitterMessagesLastUpdated
+        {
+            get
+            {
+                return twitterMessagesLastUpdated;
+            }
+            set
+            {
+                twitterMessagesLastUpdated = value;
+                Serialize();
+            }
+        }
+
+        private int twitterKeepLatest;
+        public int TwitterKeepLatest
+        {
+            get
+            {
+                return twitterKeepLatest;
+            }
+            set
+            {
+                twitterKeepLatest = value;
+                Serialize();
+            }
+        }
+
+        private bool twitterDisplayNotifications;
+        public bool TwitterDisplayNotifications
+        {
+            get
+            {
+                return twitterDisplayNotifications;
+            }
+            set
+            {
+                twitterDisplayNotifications = value;
+                Serialize();
+            }
+        }
+
+        [XmlIgnore]
+        public User TwitterLoggedInUser;
+
+        private DateTime twitterLastFriendsUpdate;
+        public DateTime TwitterLastFriendsUpdate
+        {
+            get
+            {
+                return twitterLastFriendsUpdate;
+            }
+            set
+            {
+                twitterLastFriendsUpdate = value;
+                Serialize();
+            }
+        }
+
+        private bool minimizeOnClose;
+        public bool MinimizeOnClose
+        {
+            get
+            {
+                return minimizeOnClose;
+            }
+            set
+            {
+                minimizeOnClose = value;
+                Serialize();
+            }
+        }
+
+        private bool reallyExit;
+        public bool ReallyExit
+        {
+            get
+            {
+                return reallyExit;
+            }
+            set
+            {
+                reallyExit = value;
+                Serialize();
+            }
+        }
+
+        private bool minimizeToTray;
+        public bool MinimizeToTray
+        {
+            get
+            {
+                return minimizeToTray;
+            }
+            set
+            {
+                minimizeToTray = value;
+                Serialize();
+            }
+        }
+
+        private double maximumIndividualAlerts;
+        public double MaximumIndividualAlerts
+        {
+            get
+            {
+                return maximumIndividualAlerts;
+            }
+            set
+            {
+                maximumIndividualAlerts = value;
+                Serialize();
+            }
+        }
+
+        private string urlShorteningService;
+        public string UrlShorteningService
+        {
+            get
+            {
+                return urlShorteningService;
+            }
+            set
+            {
+                value = urlShorteningService;
+                Serialize();
+            }
         }
     }
 }

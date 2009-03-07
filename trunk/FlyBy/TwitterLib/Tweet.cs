@@ -342,7 +342,7 @@ namespace TwitterLib
 
         private class Const
         {
-            public const string ApplicationFolderName = "Witty";
+            public const string ApplicationFolderName = "FlyBy";
 
             public const string SaveFileName = "lastupdated.xaml";
         }

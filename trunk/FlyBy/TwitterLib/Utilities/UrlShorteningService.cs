@@ -26,7 +26,7 @@ namespace TwitterLib
                     baseUrl = "bit.ly";
                     break;
                 case ShorteningService.Cligs:
-                    requestTemplate = "http://cli.gs/api/v1/cligs/create?url={0}&appid=WittyTwitter";
+                    requestTemplate = "http://cli.gs/api/v1/cligs/create?url={0}&appid=FlyByTwitter";
                     baseUrl = "cli.gs";
                     break;
                 case ShorteningService.TinyUrl:
