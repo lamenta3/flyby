@@ -52,6 +52,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ManageFollowing.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <BlendEmbeddedFont Include="Fonts\trebuc.ttf">
       <IsSystemFont>True</IsSystemFont>
     </BlendEmbeddedFont>
