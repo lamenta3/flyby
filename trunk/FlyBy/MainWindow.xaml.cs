@@ -7,15 +7,17 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
+using FlickrNet;
+using System.Collections.Generic;
 
 namespace FlyBy
 {
-	public partial class Window1
+	public partial class MainWindow
 	{
         /// <summary>
         /// Public constructor
         /// </summary>
-		public Window1()
+		public MainWindow()
 		{
 			this.InitializeComponent();
 			
@@ -108,6 +110,93 @@ namespace FlyBy
             {
                 // couldn't open it, oh well
             }
+        }
+
+        /// <summary>
+        /// Show the username and password fields
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Flickr_NewAccount_Click(object sender, RoutedEventArgs e)
+        {
+            FlickrUsernameBox.Clear();
+            FlickrUsernameLabel.Visibility = Visibility.Visible;
+            FlickrUsernameBox.Visibility = Visibility.Visible;
+
+            FlickrPasswordBox.Clear();
+            FlickrPasswordLabel.Visibility = Visibility.Visible;
+            FlickrPasswordBox.Visibility = Visibility.Visible;
+
+            FlickrNewAccountButton.Visibility = Visibility.Hidden;
+            FlickrAddUserButton.Visibility = Visibility.Visible;
+        }
+
+        private void FlickrUsernameBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (FlickrUsernameBox.Text != "")
+            {
+                FlickrUsernameLabel.Visibility = Visibility.Hidden;
+
+                // disable the add button
+            }
+            else
+            {
+                FlickrUsernameLabel.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void FlickrAddUser_Click(object sender, RoutedEventArgs e)
+        {
+            if (FlickrUsernameBox.Text != "" && FlickrPasswordBox.Password != "")
+            {
+                App.Instance().Options.AddFlickrUser(FlickrUsernameBox.Text, FlickrPasswordBox.Password);
+
+                // update the username box
+                ResetFlickrAccountList();
+
+                // reset the controls
+                FlickrUsernameBox.Clear();
+                FlickrUsernameLabel.Visibility = Visibility.Hidden;
+                FlickrUsernameBox.Visibility = Visibility.Hidden;
+
+                FlickrPasswordBox.Clear();
+                FlickrPasswordLabel.Visibility = Visibility.Hidden;
+                FlickrPasswordBox.Visibility = Visibility.Hidden;
+
+                FlickrNewAccountButton.Visibility = Visibility.Visible;
+                FlickrAddUserButton.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void ResetFlickrAccountList()
+        {
+            FlickrAccountList.Items.Clear();
+            // fill in the users list
+            foreach (KeyValuePair<string, string> userLine in App.Instance().Options.FlickrCredentials)
+            {
+                FlickrAccountList.Items.Add(userLine.Key);
+            }
+        }
+
+        private void FlickrPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (FlickrPasswordBox.Password != "")
+            {
+                FlickrPasswordLabel.Visibility = Visibility.Hidden;
+
+                // disable the add button
+            }
+            else
+            {
+                FlickrPasswordLabel.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void FlickrDeleteUser_Click(object sender, RoutedEventArgs e)
+        {
+            string username = FlickrAccountList.SelectedItem.ToString().ToLower();
+
+            App.Instance().Options.DeleteFlickrUser(username);
         }
 	}
 }
