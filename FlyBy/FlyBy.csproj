@@ -12,9 +12,10 @@
     <ProjectGuid>{60FB2ADD-E784-49BA-A207-81319F131585}</ProjectGuid>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <OutputType>WinExe</OutputType>
-    <ApplicationIcon>Application.ico</ApplicationIcon>
+    <ApplicationIcon>App.ico</ApplicationIcon>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <StartupObject>FlyBy.App</StartupObject>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -111,6 +112,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Application.ico" />
+    <Resource Include="App.ico" />
   </ItemGroup>
 </Project>
