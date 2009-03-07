@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyBy", "FlyBy\FlyBy.csproj", "{60FB2ADD-E784-49BA-A207-81319F131585}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlickrNet", "FlyBy\FlickrNet\FlickrNet.csproj", "{5F017126-C1FF-4996-85CC-6150E80C6AFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterLib", "FlyBy\TwitterLib\TwitterLib.csproj", "{6CB55919-6C11-43A1-8769-57461BE5B0AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +17,16 @@ Global
 		{60FB2ADD-E784-49BA-A207-81319F131585}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60FB2ADD-E784-49BA-A207-81319F131585}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60FB2ADD-E784-49BA-A207-81319F131585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F017126-C1FF-4996-85CC-6150E80C6AFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F017126-C1FF-4996-85CC-6150E80C6AFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F017126-C1FF-4996-85CC-6150E80C6AFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F017126-C1FF-4996-85CC-6150E80C6AFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CB55919-6C11-43A1-8769-57461BE5B0AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB55919-6C11-43A1-8769-57461BE5B0AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB55919-6C11-43A1-8769-57461BE5B0AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB55919-6C11-43A1-8769-57461BE5B0AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
