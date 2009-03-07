@@ -22,6 +22,8 @@ namespace FlyBy
 			this.InitializeComponent();
 			
 			// Insert code required on object creation below this point.
+            ResetTwitterAccountList();
+            ResetFlickrAccountList();
 		}
 
         /// <summary>
@@ -113,7 +115,7 @@ namespace FlyBy
         }
 
         /// <summary>
-        /// Show the username and password fields
+        /// Show the Flickr username and password fields
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -127,8 +129,10 @@ namespace FlyBy
             FlickrPasswordLabel.Visibility = Visibility.Visible;
             FlickrPasswordBox.Visibility = Visibility.Visible;
 
-            FlickrNewAccountButton.Visibility = Visibility.Hidden;
+            FlickrNewAccountButton.Visibility = Visibility.Collapsed;
             FlickrAddUserButton.Visibility = Visibility.Visible;
+
+            FlickrOptionsGroupBox.InvalidateVisual();
         }
 
         private void FlickrUsernameBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -156,18 +160,36 @@ namespace FlyBy
 
                 // reset the controls
                 FlickrUsernameBox.Clear();
-                FlickrUsernameLabel.Visibility = Visibility.Hidden;
-                FlickrUsernameBox.Visibility = Visibility.Hidden;
+                FlickrUsernameLabel.Visibility = Visibility.Collapsed;
+                FlickrUsernameBox.Visibility = Visibility.Collapsed;
 
                 FlickrPasswordBox.Clear();
-                FlickrPasswordLabel.Visibility = Visibility.Hidden;
-                FlickrPasswordBox.Visibility = Visibility.Hidden;
+                FlickrPasswordLabel.Visibility = Visibility.Collapsed;
+                FlickrPasswordBox.Visibility = Visibility.Collapsed;
 
                 FlickrNewAccountButton.Visibility = Visibility.Visible;
-                FlickrAddUserButton.Visibility = Visibility.Hidden;
+                FlickrAddUserButton.Visibility = Visibility.Collapsed;
+            }
+
+            FlickrOptionsGroupBox.InvalidateVisual();
+        }
+
+        /// <summary>
+        /// Populate the list of twitter users
+        /// </summary>
+        private void ResetTwitterAccountList()
+        {
+            TwitterAccountList.Items.Clear();
+            // fill in the users list
+            foreach (KeyValuePair<string, string> userLine in App.Instance().Options.TwitterCredentials)
+            {
+                TwitterAccountList.Items.Add(userLine.Key);
             }
         }
 
+        /// <summary>
+        /// Populate the list of flickr users
+        /// </summary>
         private void ResetFlickrAccountList()
         {
             FlickrAccountList.Items.Clear();
@@ -188,7 +210,7 @@ namespace FlyBy
             }
             else
             {
-                FlickrPasswordLabel.Visibility = Visibility.Hidden;
+                FlickrPasswordLabel.Visibility = Visibility.Visible;
             }
         }
 
@@ -197,6 +219,91 @@ namespace FlyBy
             string username = FlickrAccountList.SelectedItem.ToString().ToLower();
 
             App.Instance().Options.DeleteFlickrUser(username);
+
+            ResetFlickrAccountList();
+        }
+
+        /// <summary>
+        /// Show the username and password fields
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Twitter_NewAccount_Click(object sender, RoutedEventArgs e)
+        {
+            TwitterUsernameBox.Clear();
+            TwitterUsernameLabel.Visibility = Visibility.Visible;
+            TwitterUsernameBox.Visibility = Visibility.Visible;
+
+            TwitterPasswordBox.Clear();
+            TwitterPasswordLabel.Visibility = Visibility.Visible;
+            TwitterPasswordBox.Visibility = Visibility.Visible;
+
+            TwitterNewAccountButton.Visibility = Visibility.Collapsed;
+            TwitterAddUserButton.Visibility = Visibility.Visible;
+
+            TwitterOptionsGroupBox.InvalidateVisual();
+        }
+
+        private void TwitterUsernameBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TwitterUsernameBox.Text != "")
+            {
+                TwitterUsernameLabel.Visibility = Visibility.Hidden;
+
+                // disable the add button
+            }
+            else
+            {
+                TwitterUsernameLabel.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void TwitterPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (TwitterPasswordBox.Password != "")
+            {
+                TwitterPasswordLabel.Visibility = Visibility.Hidden;
+
+                // disable the add button
+            }
+            else
+            {
+                TwitterPasswordLabel.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void TwitterAddUser_Click(object sender, RoutedEventArgs e)
+        {
+            if (TwitterUsernameBox.Text != "" && TwitterPasswordBox.Password != "")
+            {
+                App.Instance().Options.AddTwitterUser(TwitterUsernameBox.Text, TwitterPasswordBox.Password);
+
+                // update the username box
+                ResetTwitterAccountList();
+
+                // reset the controls
+                TwitterUsernameBox.Clear();
+                TwitterUsernameLabel.Visibility = Visibility.Collapsed;
+                TwitterUsernameBox.Visibility = Visibility.Collapsed;
+
+                TwitterPasswordBox.Clear();
+                TwitterPasswordLabel.Visibility = Visibility.Collapsed;
+                TwitterPasswordBox.Visibility = Visibility.Collapsed;
+
+                TwitterNewAccountButton.Visibility = Visibility.Visible;
+                TwitterAddUserButton.Visibility = Visibility.Collapsed;
+            }
+
+            FlickrOptionsGroupBox.InvalidateVisual();
+        }
+
+        private void TwitterDeleteUser_Click(object sender, RoutedEventArgs e)
+        {
+            string username = TwitterAccountList.SelectedItem.ToString().ToLower();
+
+            App.Instance().Options.DeleteTwitterUser(username);
+
+            ResetTwitterAccountList();
         }
 	}
 }

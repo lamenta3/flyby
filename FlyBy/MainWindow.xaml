@@ -4,7 +4,7 @@
 	x:Class="FlyBy.MainWindow"
 	x:Name="Window"
 	Title="FlyBy"
-	Width="420" Height="480" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+	Width="440" Height="480" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
     <Window.Resources>
         <Style x:Key="ButtonStyle1" BasedOn="{x:Null}" TargetType="{x:Type Button}">
             <Setter Property="Template">
@@ -117,7 +117,7 @@
                         <GroupBox Header="General" Background="LightGray">
                             <Label>Hello world</Label>
                         </GroupBox>
-                        <GroupBox Header="Twitter" Background="SkyBlue">
+                        <GroupBox Header="Twitter" Background="SkyBlue" Name="TwitterOptionsGroupBox">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
@@ -125,11 +125,19 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Grid.Row="0">
                                     <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Accounts:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
-                                    <ListBox Margin="2,2,2,0" IsSynchronizedWithCurrentItem="True" Width="152" MinHeight="20" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Opacity="0.465"/>
-                                    <Button Content="New Account" MinHeight="20" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Opacity="0.465"/>
-                                    <WrapPanel Margin="2">
-                                        <Button Background="SkyBlue" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Edit" Width="40"/>
-                                        <Button Background="SkyBlue" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Delete" Width="40"/>
+                                    <ListBox Margin="2,2,2,0" IsSynchronizedWithCurrentItem="True" Width="152" MinHeight="30" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Opacity="0.465" Name="TwitterAccountList"/>
+                                    <Button Content="New Account" MinHeight="20" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Name="TwitterNewAccountButton" Click="Twitter_NewAccount_Click"/>
+                                    <Grid>
+                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterUsernameLabel" VerticalAlignment="Center">Username</Label>
+                                        <TextBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterUsernameBox" VerticalAlignment="Center" TextChanged="TwitterUsernameBox_TextChanged"/>
+                                    </Grid>
+                                    <Grid>
+                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterPasswordLabel" VerticalAlignment="Center">Password</Label>
+                                        <PasswordBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterPasswordBox" VerticalAlignment="Center" PasswordChanged="TwitterPasswordBox_PasswordChanged"/>
+                                    </Grid>
+                                    <WrapPanel Margin="2" HorizontalAlignment="Center">
+                                        <Button Background="SkyBlue" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Add/Update" Width="80" Name="TwitterAddUserButton" Click="TwitterAddUser_Click"/>
+                                        <Button Background="SkyBlue" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Delete" Width="80" Click="TwitterDeleteUser_Click" />
                                     </WrapPanel>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Grid.Row="0">
@@ -172,33 +180,33 @@
                                 </StackPanel>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Header="Flickr" Background="#FFFDEB97">
+                        <GroupBox Header="Flickr" Background="LightPink" Name="FlickrOptionsGroupBox">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0">
-                                    <Label>Accounts:</Label>
-                                    <ListBox Margin="2,2,2,0" IsSynchronizedWithCurrentItem="True" Width="152" MinHeight="25" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Name="FlickrAccountList"  Opacity="0.465"/>
+                                <StackPanel Grid.Column="0" Grid.Row="0">
+                                    <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Accounts:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
+                                    <ListBox Margin="2,2,2,0" IsSynchronizedWithCurrentItem="True" Width="152" MinHeight="30" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Name="FlickrAccountList"  Opacity="0.465"/>
                                     <Button Content="New Account" MinHeight="20" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Name="FlickrNewAccountButton" Click="Flickr_NewAccount_Click"/>
                                     <Grid>
-                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Hidden" Name="FlickrUsernameLabel">Username</Label>
-                                        <TextBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Hidden" Name="FlickrUsernameBox" TextChanged="FlickrUsernameBox_TextChanged"/>
+                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrUsernameLabel" VerticalAlignment="Center">Username</Label>
+                                        <TextBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrUsernameBox" VerticalAlignment="Center" TextChanged="FlickrUsernameBox_TextChanged"/>
                                     </Grid>
                                     <Grid>
-                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Hidden" Name="FlickrPasswordLabel">Password</Label>
-                                        <PasswordBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Hidden" Name="FlickrPasswordBox" PasswordChanged="FlickrPasswordBox_PasswordChanged"/>
+                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrPasswordLabel" VerticalAlignment="Center">Password</Label>
+                                        <PasswordBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrPasswordBox" VerticalAlignment="Center" PasswordChanged="FlickrPasswordBox_PasswordChanged"/>
                                     </Grid>
                                     
                                     <WrapPanel Margin="2" HorizontalAlignment="Center">
-                                        <Button Background="#FFFDEB97" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Visibility="Hidden" Content="Add/Update" Name="FlickrAddUserButton" Click="FlickrAddUser_Click" Width="40"/>
-                                        <Button Background="#FFFDEB97" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Delete" Click="FlickrDeleteUser_Click" Width="40"/>
+                                        <Button Background="LightPink" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Visibility="Collapsed" Content="Add/Update" Name="FlickrAddUserButton" Click="FlickrAddUser_Click" Width="80"/>
+                                        <Button Background="LightPink" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Delete" Click="FlickrDeleteUser_Click" Width="80"/>
                                     </WrapPanel>
                                     
                                 </StackPanel>
                                 <StackPanel Grid.Column="1">
-                                    <Label>Preferences:</Label>
+                                    <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Preferences:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
                                 </StackPanel>
                             </Grid>
                         </GroupBox>
