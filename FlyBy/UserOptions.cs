@@ -10,6 +10,7 @@ using TwitterLib;
 namespace FlyBy
 {
     [XmlRoot("UserOptions")]
+    [XmlInclude(typeof(UserList))]
     public class UserOptions
     {
         /// <summary>
@@ -19,6 +20,7 @@ namespace FlyBy
         {
             FlickrCredentials = new Dictionary<string, string>();
             TwitterCredentials = new Dictionary<string, string>();
+            TwitterUserLists = new List<UserList>();
 
             twitterLoggedIn = false;
         }
@@ -67,6 +69,81 @@ namespace FlyBy
                     FlickrCredentials.Add((string)value[i].Key, (string)value[i].Value);
                 }
             }
+        }
+
+        /// <summary>
+        /// Twitter user lists
+        /// </summary>
+        public List<UserList> TwitterUserLists { get; set; }
+
+        public bool RemoveUserList(string name)
+        {
+            foreach(UserList ul in TwitterUserLists)
+            {
+                if(ul.Name.Equals(name))
+                {
+                    TwitterUserLists.Remove(ul);
+
+                    Serialize();
+
+                    App.Instance().UpdateMainWindowFilter();
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public UserList FindUserList(string name)
+        {
+            foreach (UserList ul in TwitterUserLists)
+            {
+                if (ul.Name.Equals(name))
+                {
+                    return ul;
+                }
+            }
+
+            return null;
+        }
+
+        public bool UpdateUserList(string name, string[] users)
+        {
+            UserList ul = FindUserList(name);
+
+            if (ul != null)
+            {
+                ul.UserArray = users;
+
+                Serialize();
+
+                App.Instance().UpdateMainWindowFilter();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool AddUserList(string name)
+        {
+            foreach(UserList ul in TwitterUserLists)
+            {
+                if (ul.Name.Equals(name))
+                {
+                    // this list is already in there
+                    return false;
+                }
+            }
+
+            TwitterUserLists.Add(new UserList(name));
+
+            Serialize();
+
+            App.Instance().UpdateMainWindowFilter();
+
+            return true;
         }
 
         /// <summary>
@@ -191,7 +268,6 @@ namespace FlyBy
                 Serialize();
             } 
         }
-
 
         private bool? showTwitterBalloonPopup;
         public bool? ShowTwitterBalloonPopup 
@@ -392,6 +468,78 @@ namespace FlyBy
             {
                 value = urlShorteningService;
                 Serialize();
+            }
+        }
+    }
+
+    public class UserList
+    {
+        public UserList()
+        {
+            Users = new List<string>();
+        }
+
+        public UserList(string name)
+        {
+            Users = new List<string>();
+            this.Name = name;
+        }
+
+        /// <summary>
+        /// Name of the list
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// list of users
+        /// </summary>
+        [XmlIgnore]
+        public List<string> Users;
+
+        /// <summary>
+        /// Property created to fool xml serialization
+        /// </summary>
+        [XmlArray("Users")]
+        [XmlArrayItem("UsersLine", Type = typeof(string))]
+        public string[] UserArray
+        {
+            get
+            {
+                //Make an array of DictionaryEntries to return 
+                string[] ret = new string[Users.Count];
+                int i = 0;
+                //Iterate through Stuff to load items into the array. 
+                foreach (string str in Users)
+                {
+                    ret[i] = str;
+                    i++;
+                }
+                return ret;
+            }
+            set
+            {
+                Users.Clear();
+                for (int i = 0; i < value.Length; i++)
+                {
+                    Users.Add((string)value[i]);
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string UserRegex
+        {
+            get
+            {
+                string res = "";
+                for (int i = 0; i < Users.Count - 2; i++)
+                {
+                    res += Users[i];
+                    res += "|";
+                }
+                res += Users[Users.Count - 1];
+
+                return res;
             }
         }
     }

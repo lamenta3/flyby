@@ -15,6 +15,7 @@ using System.Windows.Threading;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Documents;
+using System.Text.RegularExpressions;
 
 namespace FlyBy
 {
@@ -50,6 +51,13 @@ namespace FlyBy
             // TODO: DisplayLoginIfUserNotLoggedIn();
 
             // TODO: SetTweetSorting();
+
+            UpdateFilter();
+            if (ListFilterListBox.SelectedItem == null)
+            {
+                ListFilterListBox.SelectedIndex = 0;
+            }
+
         }
 
         private void TweetsListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -129,24 +137,6 @@ namespace FlyBy
 
             if (userTweets.Count > 0)
                 UserTimelineListBox.SelectedIndex = 0;
-
-            // JMF: There's an issue with binding where the wrong user's header is sometimes 
-            // being displayed.  I think it is related to the fact that these header elements
-            // are bound to a property found in each list item, and are probably picking up
-            // the object from a previous list before the current list is updated (i.e., a
-            // binding race condition?).
-
-            // Manually setting header here as a workaround....
-            if (u != null)
-            {
-                UserImage.Source = new ImageSourceConverter().ConvertFromString(u.ImageUrl) as ImageSource;
-                FullName.Text = u.FullName;
-                Description.Text = u.Description;
-                SiteUrl.Text = u.SiteUrl;
-                Location.Text = u.Location;
-            }
-
-            //StopStoryboard("Fetching");
         }
 
         private void ContextMenuDelete_Click(object sender, RoutedEventArgs e)
@@ -337,7 +327,6 @@ namespace FlyBy
                 //App.Logger.Error("Incorrect proxy configuration.");
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         // Main collection of direct messages
@@ -494,7 +483,6 @@ namespace FlyBy
                 fakeTweets[0].User.ScreenName = "@" + userNotFoundEx.UserId;
                 fakeTweets[0].User.Description = userNotFoundEx.Message;
 
-
                 //StopStoryboard("Fetching");
 
                 this.UserContextMenu.IsEnabled = false;
@@ -549,11 +537,6 @@ namespace FlyBy
             {
                 NumberLabel.Foreground = new SolidColorBrush(Colors.Black);
             }
-        }
-
-        private void TwitterListsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -944,11 +927,14 @@ namespace FlyBy
 
         private void TwitterDeleteUser_Click(object sender, RoutedEventArgs e)
         {
-            string username = TwitterAccountList.SelectedItem.ToString().ToLower();
+            if (TwitterAccountList.SelectedItem != null)
+            {
+                string username = TwitterAccountList.SelectedItem.ToString();
 
-            App.Instance().Options.DeleteTwitterUser(username);
+                App.Instance().Options.DeleteTwitterUser(username);
 
-            ResetTwitterOptions();
+                ResetTwitterOptions();
+            }
         }
 
         // Delegates for placing jobs onto the thread dispatcher.  
@@ -1204,6 +1190,14 @@ namespace FlyBy
                 // login info from user settings is not valid, re-display the login screen.
                 //PlayStoryboard("ShowLogin");
             }
+
+            if (user != null)
+            {
+                UserImage.Source = new ImageSourceConverter().ConvertFromString(user.ImageUrl) as ImageSource;
+                TwitterUserName.Text = user.ScreenName;
+                TwitterUserName.Tag = user.SiteUrl;
+                TwitterFullName.Text = user.Name;
+            }
         }
 
         private void SetupFriendsListTimer()
@@ -1248,7 +1242,7 @@ namespace FlyBy
 
             App.Instance().Options.TwitterLastUpdated = lastUpdated.ToString();
 
-            FilterTweets(newTweets, true);
+            //FilterTweets(newTweets);
             HighlightTweets(newTweets);
             UpdateExistingTweets();
 
@@ -1322,22 +1316,36 @@ namespace FlyBy
             return false;
         }
 
-        private void FilterTweets(TweetCollection tweets, bool filterUsers)
+        TweetCollection filtered = new TweetCollection();
+
+        private void FilterTweets(TweetCollection tweets, string selectedItem)
         {
-            /*
-            bool usersToFilter = filterUsers && (ignoredUsers.Count > 0);
-            if (string.IsNullOrEmpty(AppSettings.FilterRegex) && !usersToFilter)
+            if (selectedItem.Equals("All"))
+            {
+                TweetsListBox.DataContext = tweets;
                 return;
+            }
+
+            // empty out the filter
+            filtered = new TweetCollection();
+
+            // user list to filter on
+            UserList ul = App.Instance().Options.FindUserList(selectedItem);
 
             for (int i = tweets.Count - 1; i >= 0; i--)
             {
-                Tweet tweet = tweets[i];
-                if (!string.IsNullOrEmpty(AppSettings.FilterRegex) && Regex.IsMatch(tweet.Text, AppSettings.FilterRegex, RegexOptions.IgnoreCase))
-                    tweets.Remove(tweet);
-                else if (ignoredUsers.ContainsKey(tweet.User.ScreenName) && ignoredUsers[tweet.User.ScreenName] > DateTime.Now)
-                    tweets.Remove(tweet);
+                if (Regex.IsMatch(tweets[i].User.ScreenName, ul.UserRegex, RegexOptions.IgnoreCase))
+                {
+                    filtered.Add(tweets[i]);
+                }
             }
-             */
+
+            // set the current data context to the filtered tweets
+            TweetsListBox.DataContext = filtered;
+
+            TweetsListBox.Visibility = Visibility.Hidden;
+            TweetsListBox.InvalidateVisual();
+            TweetsListBox.Visibility = Visibility.Visible;
         }
 
         private void HighlightTweets(TweetCollection tweets)
@@ -1787,6 +1795,44 @@ namespace FlyBy
         private void ShowTwitterBalloonPopupCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             App.Instance().Options.ShowTwitterBalloonPopup = ShowTwitterBalloonPopupCheckBox.IsChecked;
+        }
+
+        private void ManageLists_Click(object sender, RoutedEventArgs e)
+        {
+            App.Instance().ShowListManager();
+        }
+
+        internal void UpdateFilter()
+        {
+            ListFilterListBox.Items.Clear();
+            ListFilterListBox.Items.Add("All");
+
+            // update the filter list view
+            foreach (UserList ul in App.Instance().Options.TwitterUserLists)
+            {
+                ListFilterListBox.Items.Add(ul.Name);
+            }
+        }
+
+        private void TwitterListsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // this changes based on what view (main, replies, etc we're viewing; 
+            // as only the main view is implemented, we're just concerning ourselves with it
+            if (e.AddedItems.Count > 0)
+            {
+                ListBoxItem lbi = (e.AddedItems[0] as ListBoxItem);
+                string str = (e.AddedItems[0] as string);
+                if(str != null)
+                {
+                    FilterTweets(tweets, str);
+                }
+                else if (lbi != null)
+                {
+                    FilterTweets(tweets, lbi.Content.ToString());
+                }
+            }
+
+            //string selecteditem = (TwitterListsListBox.SelectedItem as ListBoxItem).Content.ToString();
         }
     }
 }
