@@ -60,9 +60,9 @@ namespace FlyBy.Properties {
             }
         }
         
-        internal static System.Drawing.Icon AppIcon {
+        internal static System.Drawing.Icon App {
             get {
-                object obj = ResourceManager.GetObject("AppIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("App", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

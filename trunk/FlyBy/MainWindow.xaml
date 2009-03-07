@@ -7,13 +7,15 @@
 	x:Class="FlyBy.MainWindow"
 	x:Name="Window"
 	Title="FlyBy"
-	Width="440" Height="480" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+	Width="440" Height="480" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+    Closing="Window_Closing">
     <Window.Resources>
         <LinearGradientBrush x:Key="StatusBackgroundBrush" StartPoint="0.5,1" EndPoint="0.5,0">
             <GradientStop Color="#FF000000" Offset="0"/>
             <GradientStop Color="#FF9AC6CF" Offset="0.0494537"/>
             <GradientStop Color="#FF54A1AA" Offset="0.0714264"/>
-            <GradientStop Color="#FF146478" Offset="0.5"/>
             <GradientStop Color="#FF408C9A" Offset="0.505493"/>
             <GradientStop Color="#FF87B6C0" Offset="0.928574"/>
             <GradientStop Color="#FFBCCDD7" Offset="0.950546"/>
@@ -146,7 +148,15 @@
 
             <TabControl IsSynchronizedWithCurrentItem="True" Background="Transparent" TabStripPlacement="Bottom" Margin="0" Padding="1,0,0,0">
                 <TabItem Header="Twitter" FontFamily="./Fonts\#Trebuchet MS" IsTabStop="True" Background="SkyBlue">
-                    <Grid Background="SkyBlue">
+                    <Grid>
+                        <Grid.Background>
+                            <!-- Import an Image for the Background -->
+                            <!-- <ImageBrush ImageSource="Resources/Background.jpg" Opacity="0.25" /> -->
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="Transparent"></GradientStop>
+                                <GradientStop Offset="0.7" Color="SkyBlue"></GradientStop>
+                            </LinearGradientBrush>
+                        </Grid.Background>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="130"/>
@@ -230,9 +240,10 @@
                                 </Grid>
                             </Border>
                             <Label DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,2,2,0" Width="44" Content="View:" Height="22" VerticalAlignment="Bottom" FontFamily="./Fonts\#Trebuchet MS" FontSize="12" FontWeight="Bold" Foreground="#FF2F6AA2"/>
-                            <ListBox DockPanel.Dock="Top" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Margin="2,0,2,2" Width="120" VerticalAlignment="Bottom" d:LayoutOverrides="VerticalAlignment" BorderThickness="1,1,1,1" Name="TwitterListsListBox" SelectionChanged="TwitterListsListBox_SelectionChanged">
-                                <ListBoxItem Content="All" IsSelected="True"/>
-                                <ListBoxItem Content="Recent"/>
+                            <ListBox DockPanel.Dock="Top" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" 
+                                     Margin="2,0,2,2" Width="120" VerticalAlignment="Bottom" d:LayoutOverrides="VerticalAlignment" 
+                                     BorderThickness="1,1,1,1" Name="TwitterViewsListBox" SelectionChanged="TwitterListsListBox_SelectionChanged">
+                                <ListBoxItem Content="Recent" IsSelected="True"/>
                                 <ListBoxItem Content="Replies"/>
                                 <ListBoxItem Content="Messages"/>
                                 <ListBoxItem Content="Favorites"/>
@@ -242,43 +253,76 @@
                             <Label DockPanel.Dock="Top" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,0" 
                                    Width="43" Height="24" Content="Lists:" FontFamily="Trebuchet MS" FontWeight="Bold" 
                                    FontSize="12" Foreground="#FF2F6AA2"/>
-                            <ListBox DockPanel.Dock="Top" Name="ListFilterListBox" HorizontalAlignment="Right" Margin="2,0,2,2" 
-                                     VerticalAlignment="Top" Width="120" Height="75" BorderThickness="1,1,1,1" SelectionChanged="TwitterListsListBox_SelectionChanged">
+                            <ListBox DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,0,2,2" 
+                                     VerticalAlignment="Top" Width="120" Height="75" 
+                                     BorderThickness="1,1,1,1" Name="TwitterListsListBox" 
+                                     SelectionChanged="TwitterListsListBox_SelectionChanged">
                                 <ListBoxItem Content="All" IsSelected="True"/>
                                 <ListBoxItem Content="High Priority"/>
                             </ListBox>
                             <WrapPanel DockPanel.Dock="Top" HorizontalAlignment="Right">
                                 <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" 
                                         Width="45" Content="New" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" 
-                                        Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
+                                        Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment" Click="ManageLists_Click"/>
                                 <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" 
                                         Width="50" Content="Manage" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" 
                                         Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment" Click="ManageLists_Click"/>
                             </WrapPanel>
-                            <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="45" Content="Refresh" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
-
                         </DockPanel>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Flickr" Background="LightPink" FontFamily="./Fonts\#Trebuchet MS">
-                    <ListView>
-                        <ListViewItem>
-                            List View Items
-                        </ListViewItem>
-                    </ListView>
+                    <Grid>
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="Transparent"></GradientStop>
+                                <GradientStop Offset="0.7" Color="LightPink"></GradientStop>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="130"/>
+                        </Grid.ColumnDefinitions>
+                        <ListView Grid.Column="0">
+                            <ListViewItem>
+                                Recent flickr items
+                            </ListViewItem>
+                        </ListView>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Firehose" Background="#FFFDEB97" FontFamily="./Fonts\#Trebuchet MS">
-                    <DockPanel>
-                        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,1,6" Style="{DynamicResource TextButton}" VerticalAlignment="Bottom" Width="57" Height="24" Content="Options!" Cursor="Hand" Padding="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" Foreground="#FFC42B2B" Background="#00FFB31A"/>
-                        <ListView DockPanel.Dock="Left" HorizontalAlignment="Right" Width="133" Margin="0,5,0,5"/>
-                    </DockPanel>
+                    <Grid>
+                        <Grid.Background>
+                            <!-- Import an Image for the Background -->
+                            <!-- <ImageBrush ImageSource="Resources/Background.jpg" Opacity="0.25" /> -->
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="Transparent"></GradientStop>
+                                <GradientStop Offset="0.7" Color="#FFFDEB97"></GradientStop>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="130"/>
+                        </Grid.ColumnDefinitions>
+                        <ListView Grid.Column="0">
+                            <ListViewItem>
+                                All recent items
+                            </ListViewItem>
+                        </ListView>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Options" Background="LightGreen" FontFamily="./Fonts\#Trebuchet MS">
                     <ScrollViewer>
                         <StackPanel>
-                            <GroupBox Header="General" Background="LightGray">
+                            <StackPanel.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Offset="0" Color="Transparent"></GradientStop>
+                                    <GradientStop Offset="0.7" Color="LightYellow"></GradientStop>
+                                </LinearGradientBrush>
+                            </StackPanel.Background>
+                            <!--<GroupBox Header="General" Background="LightGray">
                                 <Label>Hello world</Label>
-                            </GroupBox>
+                            </GroupBox>-->
                             <GroupBox Header="Twitter" Background="SkyBlue" Name="TwitterOptionsGroupBox">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -368,7 +412,7 @@
 
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
-                                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Preferences:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
+                                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Height="23" Content="Preferences:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
                                     </StackPanel>
                                 </Grid>
                             </GroupBox>

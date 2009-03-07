@@ -16,6 +16,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Documents;
 using System.Text.RegularExpressions;
+using System.Windows.Media.Imaging;
 
 namespace FlyBy
 {
@@ -53,11 +54,10 @@ namespace FlyBy
             // TODO: SetTweetSorting();
 
             UpdateFilter();
-            if (ListFilterListBox.SelectedItem == null)
+            if (TwitterListsListBox.SelectedItem == null)
             {
-                ListFilterListBox.SelectedIndex = 0;
+                TwitterListsListBox.SelectedIndex = 0;
             }
-
         }
 
         private void TweetsListBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -166,7 +166,7 @@ namespace FlyBy
             {
                 if (SelectedTweet.User.ScreenName == userLine.Key)
                 {
-                    if (MessageBoxResult.Yes == MessageBox.Show("Are you sure you want to permanently delete your tweet?\nThis action is irreversible. Select No to only delete it from the application or Yes to delete permanently.", 
+                    if (MessageBoxResult.Yes == MessageBox.Show("Are you sure you want to permanently delete your tweet?\nThis action is irreversible. Select No to only delete it from the application or Yes to delete permanently.",
                         "FlyBy", MessageBoxButton.YesNo, MessageBoxImage.Question))
                     {
                         LayoutRoot.Dispatcher.BeginInvoke(
@@ -1381,7 +1381,7 @@ namespace FlyBy
             _notifyIcon.BalloonTipText = "Right-click for more options";
             _notifyIcon.BalloonTipTitle = "FlyBy";
             _notifyIcon.Text = "FlyBy - Social Media Aggregator";
-            _notifyIcon.Icon = FlyBy.Properties.Resources.AppIcon;
+            _notifyIcon.Icon = FlyBy.Properties.Resources.App;
             _notifyIcon.DoubleClick += new EventHandler(m_notifyIcon_Click);
 
             System.Windows.Forms.ContextMenu notifyMenu = new System.Windows.Forms.ContextMenu();
@@ -1545,7 +1545,7 @@ namespace FlyBy
 
             if (popUpTweets.Count > App.Instance().Options.MaximumIndividualAlerts)
             {
-                Popup p = new Popup("New Tweets", BuiltNewTweetMessage(popUpTweets), 
+                Popup p = new Popup("New Tweets", BuiltNewTweetMessage(popUpTweets),
                     App.Instance().Twitter.CurrentlyLoggedInUser.ImageUrl, 0);
                 SetupPopupProps(p);
                 p.Show();
@@ -1804,13 +1804,13 @@ namespace FlyBy
 
         internal void UpdateFilter()
         {
-            ListFilterListBox.Items.Clear();
-            ListFilterListBox.Items.Add("All");
+            TwitterListsListBox.Items.Clear();
+            TwitterListsListBox.Items.Add("All");
 
             // update the filter list view
             foreach (UserList ul in App.Instance().Options.TwitterUserLists)
             {
-                ListFilterListBox.Items.Add(ul.Name);
+                TwitterListsListBox.Items.Add(ul.Name);
             }
         }
 
@@ -1820,19 +1820,74 @@ namespace FlyBy
             // as only the main view is implemented, we're just concerning ourselves with it
             if (e.AddedItems.Count > 0)
             {
-                ListBoxItem lbi = (e.AddedItems[0] as ListBoxItem);
-                string str = (e.AddedItems[0] as string);
-                if(str != null)
+                string selectedView = "";
+                if (TwitterViewsListBox == null)
                 {
-                    FilterTweets(tweets, str);
+                    selectedView = "Recent";
                 }
-                else if (lbi != null)
+                else if (TwitterViewsListBox.SelectedItem is ListBoxItem)
                 {
-                    FilterTweets(tweets, lbi.Content.ToString());
+                    selectedView = (TwitterViewsListBox.SelectedItem as ListBoxItem).Content.ToString();
+                }
+                else
+                {
+                    selectedView = TwitterListsListBox.SelectedItem.ToString();
+                }
+
+                string selectedFilter = "";
+                if (TwitterListsListBox == null)
+                {
+                    selectedFilter = "All";
+                }
+                else if (TwitterListsListBox.SelectedItem is ListBoxItem)
+                {
+                    selectedFilter = (TwitterListsListBox.SelectedItem as ListBoxItem).Content.ToString();
+                }
+                else
+                {
+                    selectedFilter = TwitterListsListBox.SelectedItem.ToString();
+                }
+
+                if (selectedView == null || selectedView.Equals("") || selectedView.Equals("All") || selectedView.Equals("Recent"))
+                {
+                    FilterTweets(tweets, selectedFilter);
+                }
+                else if (selectedView == "Replies")
+                {
+                    if (replies == null || replies.Count == 0)
+                    {
+                        GetReplies();
+                    }
+                    FilterTweets(replies, selectedFilter);
+                }
+                else if (selectedView == "Messages")
+                {
+                    // DirectMessageCollection messages
+                }
+                else if (selectedView == "Favorites")
+                {
+
+                }
+                else if (selectedView == "User")
+                {
+                    if (userTweets == null || userTweets.Count == 0)
+                    {
+                        GetUserTimeline(App.Instance().Twitter.CurrentlyLoggedInUser.ScreenName);
+                    }
+                    FilterTweets(userTweets, selectedFilter);
                 }
             }
+        }
 
-            //string selecteditem = (TwitterListsListBox.SelectedItem as ListBoxItem).Content.ToString();
+        /// <summary>
+        /// Exit application when this window is closed
+        /// </summary>
+        /// <param name="sender">sender</param>
+        /// <param name="e">event args</param>
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // exit application
+            Application.Current.Shutdown();
         }
     }
 }
