@@ -11,11 +11,12 @@ using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using FlickrNet;
 using System.Xml.Serialization;
+using TwitterLib;
 
 namespace FlyBy
 {
-	public partial class App : System.Windows.Application
-	{
+    public partial class App : System.Windows.Application
+    {
         /// <summary>
         /// Our public constructor
         /// </summary>
@@ -52,15 +53,22 @@ namespace FlyBy
 
             // bring it to front
             mainWindow.Activate();
+
+            if (Options.TwitterCredentials.Count > 0)
+            {
+                mainWindow.LoginTwitterUser();
+            }
+            
         }
 
         private void CreateUserOptions()
         {
             // deserialize or create a new UserManager
             XmlSerializer deserial = new XmlSerializer(typeof(UserOptions));
+            UserOptions.Deserializing = true;
             try
             {
-                System.IO.TextReader read = new System.IO.StreamReader("options.xml");
+                System.IO.TextReader read = new System.IO.StreamReader(UserOptions.Filename);
                 Options = (UserOptions)deserial.Deserialize(read);
                 read.Close();
                 //App.WriteLine("Deserialized UserManager from users.xml");
@@ -75,6 +83,7 @@ namespace FlyBy
                 //App.WriteLine("An error was encountered while parsing the users.xml file!");
                 Options = new UserOptions();
             }
+            UserOptions.Deserializing = false;
         }
 
         /// <summary>
@@ -102,6 +111,10 @@ namespace FlyBy
         /// </summary>
         private static string FlickrApiKey = "895c13e7f2cf6c145abdcad5d5003f49";
         private static string FlickrSharedSecret = "1d4b8d4055e40a3c";
-        public Flickr F = new Flickr(FlickrApiKey, FlickrSharedSecret);
-	}
+        // Main FlickrNet object used to make Flickr API calls
+        public Flickr Flickr = new Flickr(FlickrApiKey, FlickrSharedSecret);
+
+        // Main TwitterNet object used to make Twitter API calls
+        public IServiceApi Twitter;
+    }
 }

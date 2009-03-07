@@ -1,11 +1,98 @@
 ﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Common.Controls;assembly=Common" 
+    xmlns:converters="clr-namespace:Common.Converters;assembly=Common"
+    xmlns:aero="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
 	x:Class="FlyBy.MainWindow"
 	x:Name="Window"
 	Title="FlyBy"
 	Width="440" Height="480" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
     <Window.Resources>
+        <LinearGradientBrush x:Key="StatusBackgroundBrush" StartPoint="0.5,1" EndPoint="0.5,0">
+            <GradientStop Color="#FF000000" Offset="0"/>
+            <GradientStop Color="#FF9AC6CF" Offset="0.0494537"/>
+            <GradientStop Color="#FF54A1AA" Offset="0.0714264"/>
+            <GradientStop Color="#FF146478" Offset="0.5"/>
+            <GradientStop Color="#FF408C9A" Offset="0.505493"/>
+            <GradientStop Color="#FF87B6C0" Offset="0.928574"/>
+            <GradientStop Color="#FFBCCDD7" Offset="0.950546"/>
+            <GradientStop Color="#FFAEBFCA" Offset="0.983521"/>
+            <GradientStop Color="#FFAEBFCA" Offset="1"/>
+        </LinearGradientBrush>
+
+        <SolidColorBrush x:Key="AlternatingBackgroundBrush" Color="#EAEDF1" />
+
+        <SolidColorBrush x:Key="UpdateBackgroundBrush" Color="#FFA8B9C6" />
+
+        <SolidColorBrush  x:Key="ReplyTweetBrush" Color="#FFF5F59A"/>
+
+        <SolidColorBrush  x:Key="DirectMessageBrush" Color="#FFD5DCE1"/>
+
+        <converters:ImageConverter x:Key="ImageConverter" />
+
+        <DataTemplate x:Key="TweetsTemplate">
+            <DataTemplate.Resources>
+                <Storyboard x:Key="YellowFade">
+                    <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="grid" Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" FillBehavior="Stop">
+                        <SplineColorKeyFrame KeyTime="00:00:00" Value="#FFFEFF76" />
+                        <SplineColorKeyFrame KeyTime="00:00:01" Value="#19FEFF76" />
+                    </ColorAnimationUsingKeyFrames>
+                </Storyboard>
+                <Storyboard x:Key="YellowForever">
+                    <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="grid" Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+                        <SplineColorKeyFrame KeyTime="00:00:00" Value="#FFFEFF76" />
+                        <SplineColorKeyFrame KeyTime="00:00:01" Value="#FFFEFF76" />
+                    </ColorAnimationUsingKeyFrames>
+                </Storyboard>
+            </DataTemplate.Resources>
+            <DockPanel x:Name="grid" Background="#01FFFFFF">
+                <Image DockPanel.Dock="Left" Width="35" Height="35" Margin="0,0,5,0" Source="{Binding Path=User.ImageUrl, Converter={StaticResource ImageConverter}}" x:Name="UserImage" />
+                <StackPanel DockPanel.Dock="Right" Width="Auto">
+                    <DockPanel VerticalAlignment="Top">
+                        <TextBlock Text="{Binding Path=User.ScreenName, FallbackValue=Screen Name}" FontWeight="Bold" FontSize="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" x:Name="ScreenName" Cursor="Hand" ToolTip="View this user's recent tweets" />
+                        <Button Width="20" Height="Auto" HorizontalAlignment="Right" Margin="0,0,2,0" Visibility="Collapsed" x:Name="ReplyButton">
+                            <TextBlock TextWrapping="Wrap" Text="@" VerticalAlignment="Center" x:Name="textBlock" />
+                        </Button>
+                        <TextBlock VerticalAlignment="Center" FontSize="9" Text="{Binding Path=RelativeTime, FallbackValue=1 minute ago}" FontStyle="Italic" Margin="2,2,2,2" Foreground="{DynamicResource SubForegroundBrush}" ToolTip="{Binding Path=DateCreated, Mode=Default}" />
+                        <TextBlock VerticalAlignment="Center" FontSize="9" Text="{Binding Path=Source, Mode=Default, FallbackValue=from web}" FontStyle="Italic" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource SubForegroundBrush}" />
+                    </DockPanel>
+                    <controls:TweetTextBlock x:Name="TweetText" FontSize="11" TweetText="{Binding Path=Text, FallbackValue=Tweet Text}" TextWrapping="Wrap" Margin="0,0,1,0" />
+                </StackPanel>
+            </DockPanel>
+            <DataTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True" SourceName="ScreenName">
+                    <Setter Property="Foreground" Value="#FF177E8C" TargetName="ScreenName"/>
+                </Trigger>
+                <DataTrigger Binding="{Binding Path=IsNew}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard Storyboard="{StaticResource YellowFade}" x:Name="YellowFade_BeginStoryboard" />
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsInteresting}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard Storyboard="{StaticResource YellowForever}" x:Name="YellowForever_BeginStoryboard" />
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Path=IsReply}" Value="true">
+                    <DataTrigger.Setters>
+                        <Setter Property="Background" Value="{StaticResource ReplyTweetBrush}" TargetName="grid"/>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+
+                <DataTrigger Binding="{Binding Path=Timeline}" Value="DirectMessages">
+                    <DataTrigger.Setters>
+                        <Setter Property="Background" Value="{StaticResource DirectMessageBrush}" TargetName="grid"/>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+
+                <!--<Trigger Property="IsMouseOver" Value="True">
+			<Setter Property="Visibility" TargetName="ReplyButton" Value="Visible"/>
+		  </Trigger>-->
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
         <Style x:Key="ButtonStyle1" BasedOn="{x:Null}" TargetType="{x:Type Button}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -51,168 +138,238 @@
     </Window.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <TabControl IsSynchronizedWithCurrentItem="True" Background="Transparent" TabStripPlacement="Bottom" Margin="0" Padding="1,0,0,0">
-            <TabItem Header="Twitter" FontFamily="./Fonts\#Trebuchet MS" IsTabStop="True" Background="SkyBlue">
-                <Grid Background="SkyBlue">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="130"/>
-                    </Grid.ColumnDefinitions>
-                    <DockPanel Grid.Column="0" LastChildFill="True" Background="SkyBlue">
-                        <TextBox DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="2" MinHeight="58" Text="" 
-                                 TextWrapping="Wrap" Name="TweetBox" TextChanged="TweetBox_TextChanged" KeyDown="TweetBox_KeyDown"/>
-                        <DockPanel DockPanel.Dock="Bottom">
-                            <Label DockPanel.Dock="Left" Content="What are you doing?"/>
-                            <Label DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Bottom" Height="21" Content="140" Name="NumberLabel"/>
+        <DockPanel>
+            <!-- StatusBar-->
+            <Border DockPanel.Dock="Bottom" Padding="5,2,5,2" Background="{DynamicResource StatusBackgroundBrush}" x:Name="StatusBar">
+                <TextBlock x:Name="StatusTextBlock" TextWrapping="NoWrap" Foreground="#FFE4E4E4" Text="" TextTrimming="CharacterEllipsis" />
+            </Border>
+
+            <TabControl IsSynchronizedWithCurrentItem="True" Background="Transparent" TabStripPlacement="Bottom" Margin="0" Padding="1,0,0,0">
+                <TabItem Header="Twitter" FontFamily="./Fonts\#Trebuchet MS" IsTabStop="True" Background="SkyBlue">
+                    <Grid Background="SkyBlue">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="130"/>
+                        </Grid.ColumnDefinitions>
+                        <DockPanel Grid.Column="0" LastChildFill="True" Background="SkyBlue">
+                            <TextBox DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="2" MinHeight="58" Text="" 
+                                 TextWrapping="Wrap" Name="TweetTextBox" TextChanged="TweetTextBox_TextChanged" KeyDown="TweetTextBox_KeyDown"/>
+                            <DockPanel DockPanel.Dock="Bottom">
+                                <Label DockPanel.Dock="Left" Content="What are you doing?"/>
+                                <Label DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Bottom" Height="21" Content="140" Name="NumberLabel"/>
+                            </DockPanel>
+                            <Grid>
+                                <ListBox Grid.Row="0" Grid.Column="0" x:Name="TweetsListBox" ScrollViewer.CanContentScroll="False" IsSynchronizedWithCurrentItem="True" ItemTemplate="{DynamicResource TweetsTemplate}" ItemsSource="{Binding Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,0" MouseLeftButtonUp="TweetsListBox_MouseLeftButtonUp" BorderThickness="0,0,0,0" 
+              controls:TweetTextBlock.NameClick="NameClickedInTweet"
+              controls:TweetTextBlock.HashtagClick="HashtagClickedInTweet">
+                                    <ListBox.ContextMenu>
+                                        <ContextMenu Name="recentContextMenu">
+                                            <MenuItem Header="Reply" Click="ContextMenuReply_Click"/>
+                                            <MenuItem Header="Delete" Click="ContextMenuDelete_Click" IsEnabled="True"/>
+                                            <MenuItem Header="Retweet" Click="ContextMenuRetweet_Click" IsEnabled="True"/>
+                                            <MenuItem Header="Refresh" Click="RefreshButton_Click"/>
+                                        </ContextMenu>
+                                    </ListBox.ContextMenu>
+                                </ListBox>
+                                <Grid Grid.Row="0" Grid.Column="0" Visibility="Collapsed">
+                                    <Border DockPanel.Dock="Top" BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="0,0,0,1">
+                                        <Border.Background>
+                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                <GradientStop Color="#FFD0DBE7" Offset="0" />
+                                                <GradientStop Color="#FFFFFFFF" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="80" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,12,0,0" Width="58" Height="60">
+                                                <aero:SystemDropShadowChrome CornerRadius="5,5,5,5">
+                                                    <Rectangle Stroke="#FF8E8E8E" RadiusX="10" RadiusY="5">
+                                                        <Rectangle.Fill>
+                                                            <LinearGradientBrush EndPoint="0.869,0.837" StartPoint="0.278,0.298">
+                                                                <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                                                                <GradientStop Color="#FF7BB2B7" Offset="1"/>
+                                                            </LinearGradientBrush>
+                                                        </Rectangle.Fill>
+                                                    </Rectangle>
+                                                </aero:SystemDropShadowChrome>
+                                                <Border BorderBrush="{DynamicResource ImageBorderBrush}" BorderThickness="1,1,1,1" Margin="4,5,4,5" CornerRadius="2,2,2,2">
+                                                    <Image Width="48" Height="48" Source="{Binding Path=User.ImageUrl}" x:Name="UserImage" />
+                                                </Border>
+                                            </Grid>
+                                            <Grid Grid.Column="1" Margin="0,10,0,0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="{Binding Path=User.FullName, FallbackValue=Full Name}" FontWeight="Bold" FontSize="16" x:Name="FullName" Cursor="Hand" MouseLeftButtonUp="ScreenName_MouseLeftButtonUp" Tag="{Binding Path=User.TwitterUrl, Mode=Default}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path=User.TwitterUrl, Mode=Default}" d:LayoutOverrides="Width, Height" />
+                                                <DockPanel Grid.Row="1">
+                                                    <TextBlock x:Name="Description" Text="{Binding Path=User.Description, Mode=Default, FallbackValue=Description}" TextWrapping="Wrap" FontStyle="Italic" DockPanel.Dock="Top" />
+                                                    <TextBlock x:Name="SiteUrl" Text="{Binding Path=User.SiteUrl, Mode=Default, FallbackValue=Site Url}" TextWrapping="NoWrap" MouseLeftButtonUp="Url_MouseLeftButtonUp" Cursor="Hand" TextTrimming="CharacterEllipsis" DockPanel.Dock="Top" ToolTip="{Binding Path=User.SiteUrl, Mode=Default}" TextDecorations="Underline" Foreground="#FF0000FF"><Hyperlink NavigateUri="{Binding Path=User.SiteUrl, Mode=Default, FallbackValue=Site Url}" /></TextBlock>
+                                                    <TextBlock x:Name="Location" Text="{Binding Path=User.Location, Mode=Default, FallbackValue=Location}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                                </DockPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                    <ListBox x:Name="UserTimelineListBox" ItemsSource="{Binding Mode=OneWay}" ScrollViewer.CanContentScroll="False" IsSynchronizedWithCurrentItem="True" ItemTemplate="{DynamicResource UserTimeLineTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseLeftButtonUp="TweetsListBox_MouseLeftButtonUp" BorderThickness="0,0,0,0" DockPanel.Dock="Bottom" 
+              controls:TweetTextBlock.NameClick="NameClickedInTweet"
+              controls:TweetTextBlock.HashtagClick="HashtagClickedInTweet" >
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu Name="UserContextMenu">
+                                                <MenuItem Header="Reply" Click="ContextMenuReply_Click"/>
+                                                <MenuItem Header="Follow" Click="ContextMenuFollow_Click" IsEnabled="True"/>
+                                                <MenuItem Header="Delete" Click="ContextMenuDelete_Click" IsEnabled="True"></MenuItem>
+                                                <MenuItem Header="Retweet" Click="ContextMenuRetweet_Click" IsEnabled="True"></MenuItem>
+                                                <MenuItem Header="Refresh" Click="RefreshButton_Click"></MenuItem>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                    </ListBox>
+                                </Grid>
+                            </Grid>
                         </DockPanel>
-                        <ListBox Margin="2,2,2,0" BorderThickness="1,1,1,1" Name="TweetList">
-                            <ListBox.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Retweet" Click="Retweet_Click"/>
-                                    <MenuItem Header="Copy" Click="CopyTweet_Click"/>
-                                    <MenuItem Header="Open" Click="OpenTweet_Click"/>
-                                </ContextMenu>
-                            </ListBox.ContextMenu>
-                        </ListBox>
+                        <DockPanel Grid.Column="1">
+                            <Label DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,2,2,0" Width="44" Content="View:" Height="22" VerticalAlignment="Bottom" FontFamily="./Fonts\#Trebuchet MS" FontSize="12" FontWeight="Bold" Foreground="#FF2F6AA2"/>
+                            <ListBox DockPanel.Dock="Top" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Margin="2,0,2,2" Width="120" VerticalAlignment="Bottom" d:LayoutOverrides="VerticalAlignment" BorderThickness="1,1,1,1" Name="TwitterListsListBox" SelectionChanged="TwitterListsListBox_SelectionChanged">
+                                <ListBoxItem Content="All" IsSelected="True"/>
+                                <ListBoxItem Content="Recent"/>
+                                <ListBoxItem Content="Replies"/>
+                                <ListBoxItem Content="Messages"/>
+                                <ListBoxItem Content="Favorites"/>
+                                <ListBoxItem Content="User"/>
+                            </ListBox>
+
+                            <Label DockPanel.Dock="Top" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,0" Width="43" Height="24" Content="Lists:" FontFamily="Trebuchet MS" FontWeight="Bold" FontSize="12" Foreground="#FF2F6AA2"/>
+                            <ListBox DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,0,2,2" VerticalAlignment="Top" Width="120" Height="75" BorderThickness="1,1,1,1">
+                                <ListBoxItem Content="All" IsSelected="True"/>
+                                <ListBoxItem Content="High Priority"/>
+                            </ListBox>
+                            <WrapPanel DockPanel.Dock="Top" HorizontalAlignment="Right">
+                                <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="45" Content="New" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
+                                <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="50" Content="Manage" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
+                            </WrapPanel>
+                            <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="45" Content="Refresh" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
+
+                        </DockPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Flickr" Background="LightPink" FontFamily="./Fonts\#Trebuchet MS">
+                    <ListView>
+                        <ListViewItem>
+                            List View Items
+                        </ListViewItem>
+                    </ListView>
+                </TabItem>
+                <TabItem Header="Firehose" Background="#FFFDEB97" FontFamily="./Fonts\#Trebuchet MS">
+                    <DockPanel>
+                        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,1,6" Style="{DynamicResource TextButton}" VerticalAlignment="Bottom" Width="57" Height="24" Content="Options!" Cursor="Hand" Padding="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" Foreground="#FFC42B2B" Background="#00FFB31A"/>
+                        <ListView DockPanel.Dock="Left" HorizontalAlignment="Right" Width="133" Margin="0,5,0,5"/>
                     </DockPanel>
-                    <DockPanel Grid.Column="1">
-                        <Label DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,2,2,0" Width="44" Content="View:" Height="22" VerticalAlignment="Bottom" FontFamily="./Fonts\#Trebuchet MS" FontSize="12" FontWeight="Bold" Foreground="#FF2F6AA2"/>
-                        <ListBox DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="2,0,2,2" VerticalAlignment="Top" Width="120" Height="75" BorderThickness="1,1,1,1">
-                            <ListBoxItem Content="All"/>
-                            <ListBoxItem Content="High Priority"/>
-                        </ListBox>
-                        <Label DockPanel.Dock="Top" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,0" Width="43" Height="24" Content="Lists:" FontFamily="Trebuchet MS" FontWeight="Bold" FontSize="12" Foreground="#FF2F6AA2"/>
-                        <ListBox DockPanel.Dock="Top" IsSynchronizedWithCurrentItem="True" HorizontalAlignment="Right" Margin="2,0,2,2" Width="120" VerticalAlignment="Bottom" d:LayoutOverrides="VerticalAlignment" BorderThickness="1,1,1,1">
-                            <ListBoxItem Content="All"/>
-                            <ListBoxItem Content="Recent"/>
-                            <ListBoxItem Content="Replies"/>
-                            <ListBoxItem Content="Messages"/>
-                            <ListBoxItem Content="Favorites"/>
-                            <ListBoxItem Content="My Tweets"/>
-                        </ListBox>
-                        <WrapPanel DockPanel.Dock="Top" HorizontalAlignment="Right">
-                            <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="45" Content="New" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
-                            <Button HorizontalAlignment="Right" Margin="4" Style="{DynamicResource ButtonStyle1}" Width="50" Content="Manage" VerticalAlignment="Top" Height="20" FontFamily="./Fonts\#Trebuchet MS" Foreground="#FF2F6AA2" d:LayoutOverrides="VerticalAlignment"/>
-                        </WrapPanel>
-                        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,1,6" Style="{DynamicResource TextButton}" VerticalAlignment="Bottom" Width="57" Height="24" Content="Options!" Cursor="Hand" Padding="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="#002F6AA2" Foreground="#FF2F6AA2"/>
-                    </DockPanel>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Flickr" Background="LightPink" FontFamily="./Fonts\#Trebuchet MS">
-                <ListView>
-                    <ListViewItem>
-                        List View Items
-                    </ListViewItem>
-                </ListView>
-            </TabItem>
-            <TabItem Header="Firehose" Background="#FFFDEB97" FontFamily="./Fonts\#Trebuchet MS">
-                <DockPanel>
-                    <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,0,1,6" Style="{DynamicResource TextButton}" VerticalAlignment="Bottom" Width="57" Height="24" Content="Options!" Cursor="Hand" Padding="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" Foreground="#FFC42B2B" Background="#00FFB31A"/>
-                    <ListView DockPanel.Dock="Left" HorizontalAlignment="Right" Width="133" Margin="0,5,0,5"/>
-                </DockPanel>
-            </TabItem>
-            <TabItem Header="Options" Background="LightGreen" FontFamily="./Fonts\#Trebuchet MS">
-                <ScrollViewer>
-                    <StackPanel>
-                        <GroupBox Header="General" Background="LightGray">
-                            <Label>Hello world</Label>
-                        </GroupBox>
-                        <GroupBox Header="Twitter" Background="SkyBlue" Name="TwitterOptionsGroupBox">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Grid.Row="0">
-                                    <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Accounts:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
-                                    <ListBox Margin="2,2,2,0" IsSynchronizedWithCurrentItem="True" Width="152" MinHeight="30" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Opacity="0.465" Name="TwitterAccountList"/>
-                                    <Button Content="New Account" MinHeight="20" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Name="TwitterNewAccountButton" Click="Twitter_NewAccount_Click"/>
-                                    <Grid>
-                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterUsernameLabel" VerticalAlignment="Center">Username</Label>
-                                        <TextBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterUsernameBox" VerticalAlignment="Center" TextChanged="TwitterUsernameBox_TextChanged"/>
-                                    </Grid>
-                                    <Grid>
-                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterPasswordLabel" VerticalAlignment="Center">Password</Label>
-                                        <PasswordBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterPasswordBox" VerticalAlignment="Center" PasswordChanged="TwitterPasswordBox_PasswordChanged"/>
-                                    </Grid>
-                                    <WrapPanel Margin="2" HorizontalAlignment="Center">
-                                        <Button Background="SkyBlue" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Add/Update" Width="80" Name="TwitterAddUserButton" Click="TwitterAddUser_Click"/>
-                                        <Button Background="SkyBlue" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Delete" Width="80" Click="TwitterDeleteUser_Click" />
-                                    </WrapPanel>
-                                </StackPanel>
-                                <StackPanel Grid.Column="1" Grid.Row="0">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" Height="24" Content="Preferences:" FontFamily="./Fonts\#Trebuchet MS" FontSize="12" FontWeight="Bold"/>
-                                        <CheckBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" Style="{DynamicResource SimpleCheckBox}" VerticalAlignment="Top" Height="17.677" Content="Enable &quot;catch up&quot;" FontFamily="./Fonts\#Trebuchet MS" IsChecked="True" OpacityMask="#FF000000" Foreground="#FF000000"/>
-                                        <CheckBox Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="4" Style="{DynamicResource SimpleCheckBox}" Content="For High Priority only" FontFamily="./Fonts\#Trebuchet MS" OpacityMask="#FF000000" Foreground="#FF000000"/>
-                                        <CheckBox Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Style="{DynamicResource SimpleCheckBox}" VerticalAlignment="Top" Height="15.323" Content="Show Balloon Popup" FontFamily="./Fonts\#Trebuchet MS" IsChecked="True" IsThreeState="False" OpacityMask="#FF000000" Foreground="#FF000000"/>
-                                        <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" Content="Get updates" FontFamily="./Fonts\#Trebuchet MS" VerticalAlignment="Bottom" Height="24" OpacityMask="#FF000000" Foreground="#FF000000"/>
-                                        <ComboBox Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="5" IsSynchronizedWithCurrentItem="True" BorderThickness="1,1,1,1" Opacity="1" Foreground="#FF2F6AA2" Background="#00FFFFFF" BorderBrush="#FF2F6AA2" OpacityMask="#FF2F6AA2" FontFamily="./Fonts\#Trebuchet MS" IsReadOnly="True" VerticalAlignment="Bottom" Height="21.323">
-                                            <ComboBoxItem Content="Every 3 minutes" IsSelected="True" FontFamily="Trebuchet MS"/>
-                                            <ComboBoxItem Content="Every 5 minutes" FontFamily="./Fonts\#Trebuchet MS"/>
-                                            <ComboBoxItem Content="Every 7 minutes" FontFamily="./Fonts\#Trebuchet MS"/>
-                                        </ComboBox>
-                                        <Label Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="6" VerticalAlignment="Top" Height="22" Content="Popup interval" FontFamily="Trebuchet MS" OpacityMask="#FF000000" Foreground="#FF000000"/>
-                                        <ComboBox Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="5" IsSynchronizedWithCurrentItem="True" BorderThickness="1,1,1,1" Opacity="1" Foreground="#FF2F6AA2" Background="#00FFFFFF" BorderBrush="#FF2F6AA2" OpacityMask="#FF2F6AA2" FontFamily="./Fonts\#Trebuchet MS" IsReadOnly="True" Height="21.323" VerticalAlignment="Top">
-                                            <ComboBoxItem Content="3 seconds"/>
-                                            <ComboBoxItem Content="5 seconds" IsSelected="True"/>
-                                            <ComboBoxItem Content="7 seconds"/>
-                                        </ComboBox>
-                                    </Grid>
-                                </StackPanel>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Header="Flickr" Background="LightPink" Name="FlickrOptionsGroupBox">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Grid.Row="0">
-                                    <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Accounts:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
-                                    <ListBox Margin="2,2,2,0" IsSynchronizedWithCurrentItem="True" Width="152" MinHeight="30" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Name="FlickrAccountList"  Opacity="0.465"/>
-                                    <Button Content="New Account" MinHeight="20" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Name="FlickrNewAccountButton" Click="Flickr_NewAccount_Click"/>
-                                    <Grid>
-                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrUsernameLabel" VerticalAlignment="Center">Username</Label>
-                                        <TextBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrUsernameBox" VerticalAlignment="Center" TextChanged="FlickrUsernameBox_TextChanged"/>
-                                    </Grid>
-                                    <Grid>
-                                        <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrPasswordLabel" VerticalAlignment="Center">Password</Label>
-                                        <PasswordBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrPasswordBox" VerticalAlignment="Center" PasswordChanged="FlickrPasswordBox_PasswordChanged"/>
-                                    </Grid>
-                                    
-                                    <WrapPanel Margin="2" HorizontalAlignment="Center">
-                                        <Button Background="LightPink" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Visibility="Collapsed" Content="Add/Update" Name="FlickrAddUserButton" Click="FlickrAddUser_Click" Width="80"/>
-                                        <Button Background="LightPink" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Delete" Click="FlickrDeleteUser_Click" Width="80"/>
-                                    </WrapPanel>
-                                    
-                                </StackPanel>
-                                <StackPanel Grid.Column="1">
-                                    <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Preferences:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
-                                </StackPanel>
-                            </Grid>
-                        </GroupBox>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-        </TabControl>
+                </TabItem>
+                <TabItem Header="Options" Background="LightGreen" FontFamily="./Fonts\#Trebuchet MS">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <GroupBox Header="General" Background="LightGray">
+                                <Label>Hello world</Label>
+                            </GroupBox>
+                            <GroupBox Header="Twitter" Background="SkyBlue" Name="TwitterOptionsGroupBox">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Grid.Row="0">
+                                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Accounts:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
+                                        <ListBox Margin="2,2,2,0" IsSynchronizedWithCurrentItem="True" Width="152" MinHeight="30" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Opacity="0.465" Name="TwitterAccountList"/>
+                                        <Button Content="New Account" MinHeight="20" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Name="TwitterNewAccountButton" Click="Twitter_NewAccount_Click"/>
+                                        <Grid>
+                                            <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterUsernameLabel" VerticalAlignment="Center">Username</Label>
+                                            <TextBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterUsernameBox" VerticalAlignment="Center" TextChanged="TwitterUsernameBox_TextChanged"/>
+                                        </Grid>
+                                        <Grid>
+                                            <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterPasswordLabel" VerticalAlignment="Center">Password</Label>
+                                            <PasswordBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="TwitterPasswordBox" VerticalAlignment="Center" PasswordChanged="TwitterPasswordBox_PasswordChanged"/>
+                                        </Grid>
+                                        <WrapPanel Margin="2" HorizontalAlignment="Center">
+                                            <Button Background="SkyBlue" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Add/Update" Width="80" Name="TwitterAddUserButton" Click="TwitterAddUser_Click"/>
+                                            <Button Background="SkyBlue" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Delete" Width="80" Click="TwitterDeleteUser_Click" />
+                                        </WrapPanel>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Grid.Row="0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" Height="24" Content="Preferences:" FontFamily="./Fonts\#Trebuchet MS" FontSize="12" FontWeight="Bold"/>
+                                            <CheckBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" Style="{DynamicResource SimpleCheckBox}" VerticalAlignment="Top" Height="17.677" Content="Enable &quot;catch up&quot;" FontFamily="./Fonts\#Trebuchet MS" IsChecked="True" OpacityMask="#FF000000" Foreground="#FF000000"/>
+                                            <CheckBox Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="4" Style="{DynamicResource SimpleCheckBox}" Content="For High Priority only" FontFamily="./Fonts\#Trebuchet MS" OpacityMask="#FF000000" Foreground="#FF000000"/>
+                                            <CheckBox Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5" Style="{DynamicResource SimpleCheckBox}" VerticalAlignment="Top" Height="15.323" Content="Show Balloon Popup" FontFamily="./Fonts\#Trebuchet MS" IsChecked="True" IsThreeState="False" OpacityMask="#FF000000" Name="ShowTwitterBalloonPopupCheckBox" Foreground="#FF000000" Checked="ShowTwitterBalloonPopupCheckBox_Checked"/>
+                                            <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="6" Content="Get updates" FontFamily="./Fonts\#Trebuchet MS" VerticalAlignment="Bottom" Height="24" OpacityMask="#FF000000" Foreground="#FF000000"/>
+                                            <ComboBox Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="5" IsSynchronizedWithCurrentItem="True" BorderThickness="1,1,1,1" Opacity="1" Foreground="#FF2F6AA2" Background="#00FFFFFF" BorderBrush="#FF2F6AA2" OpacityMask="#FF2F6AA2" FontFamily="./Fonts\#Trebuchet MS" IsReadOnly="True" VerticalAlignment="Bottom" Height="21.323" Name="TwitterUpdateRateDropDown" SelectionChanged="TwitterUpdateRateDropDown_SelectionChanged">
+                                                <ComboBoxItem Content="Every 3 minutes" IsSelected="True" FontFamily="Trebuchet MS"/>
+                                                <ComboBoxItem Content="Every 5 minutes" FontFamily="./Fonts\#Trebuchet MS"/>
+                                                <ComboBoxItem Content="Every 7 minutes" FontFamily="./Fonts\#Trebuchet MS"/>
+                                            </ComboBox>
+                                            <Label Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="6" VerticalAlignment="Top" Height="22" Content="Popup interval" FontFamily="Trebuchet MS" OpacityMask="#FF000000" Foreground="#FF000000"/>
+                                            <ComboBox Grid.Column="1" Grid.Row="7" Grid.ColumnSpan="5" IsSynchronizedWithCurrentItem="True" BorderThickness="1,1,1,1" Opacity="1" Foreground="#FF2F6AA2" Background="#00FFFFFF" BorderBrush="#FF2F6AA2" OpacityMask="#FF2F6AA2" FontFamily="./Fonts\#Trebuchet MS" IsReadOnly="True" Height="21.323" VerticalAlignment="Top">
+                                                <ComboBoxItem Content="3 seconds"/>
+                                                <ComboBoxItem Content="5 seconds" IsSelected="True"/>
+                                                <ComboBoxItem Content="7 seconds"/>
+                                            </ComboBox>
+                                        </Grid>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Header="Flickr" Background="LightPink" Name="FlickrOptionsGroupBox">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Grid.Row="0">
+                                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Accounts:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
+                                        <ListBox Margin="2,2,2,0" IsSynchronizedWithCurrentItem="True" Width="152" MinHeight="30" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Name="FlickrAccountList"  Opacity="0.465"/>
+                                        <Button Content="New Account" MinHeight="20" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Name="FlickrNewAccountButton" Click="Flickr_NewAccount_Click"/>
+                                        <Grid>
+                                            <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrUsernameLabel" VerticalAlignment="Center">Username</Label>
+                                            <TextBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrUsernameBox" VerticalAlignment="Center" TextChanged="FlickrUsernameBox_TextChanged"/>
+                                        </Grid>
+                                        <Grid>
+                                            <Label Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrPasswordLabel" VerticalAlignment="Center">Password</Label>
+                                            <PasswordBox Grid.Column="0" Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFFFFFFF" Width="152" Height="25" Opacity="0.465" Visibility="Collapsed" Name="FlickrPasswordBox" VerticalAlignment="Center" PasswordChanged="FlickrPasswordBox_PasswordChanged"/>
+                                        </Grid>
+
+                                        <WrapPanel Margin="2" HorizontalAlignment="Center">
+                                            <Button Background="LightPink" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Visibility="Collapsed" Content="Add/Update" Name="FlickrAddUserButton" Click="FlickrAddUser_Click" Width="80"/>
+                                            <Button Background="LightPink" BorderThickness="1,1,1,1" Foreground="#FF2F6AA2" Style="{DynamicResource ButtonStyle2}" VerticalAlignment="Bottom" Height="20" Content="Delete" Click="FlickrDeleteUser_Click" Width="80"/>
+                                        </WrapPanel>
+
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Height="23" Content="Preferences:" FontSize="12" FontFamily="./Fonts\#Trebuchet MS" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
     </Grid>
 </Window>
